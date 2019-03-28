@@ -2,6 +2,14 @@ class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   VALID_USER_NAME_REGEX = /\A[a-z0-9]+\z/
 
+  has_many :messages, dependent: :destroy
+  has_many :relationships, foreign_key: :relating_id, dependent: :destroy
+  has_many :relateds, through: :relationships
+  has_many :tags, foreign_key: :tagged_id, dependent: :destroy
+  has_many :last_reads, dependent: :destroy
+  has_many :room_members
+  has_many :rooms, through: :room_members
+
   validates :email, presence: true,
     length: {maximum: Settings.max_email_length},
     format: {with: VALID_EMAIL_REGEX},
