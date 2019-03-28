@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_28_073407) do
+ActiveRecord::Schema.define(version: 2019_03_28_103354) do
 
   create_table "last_reads", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "reader_id"
@@ -87,6 +87,7 @@ ActiveRecord::Schema.define(version: 2019_03_28_073407) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["token_digest"], name: "index_users_on_token_digest", unique: true
   end
 
   add_foreign_key "last_reads", "messages"

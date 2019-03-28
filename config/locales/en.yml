@@ -31,6 +31,10 @@
 
 en:
   hello: "Hello world"
+  unauthorized_error: "You are not authorized to access this content"
   users:
     show_error:
       user_not_found: "User not found"
+  sessions:
+    create_error:
+      wrong_password: "Password is wrong"
