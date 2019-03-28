@@ -31,3 +31,6 @@
 
 en:
   hello: "Hello world"
+  users:
+    show_error:
+      user_not_found: "User not found"
