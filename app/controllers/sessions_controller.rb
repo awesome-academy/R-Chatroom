@@ -1,7 +1,8 @@
 class SessionsController < ApplicationController
+  before_action :set_user, only: [:create, :destroy]
+
   def create
-    @user = User.find_by user_name: session_params[:user_name]
-    if @user&.authenticate session_params[:password]
+    if @user.authenticate session_params[:password]
       @user.reroll_token
       render :create_success, status: :created
     else
@@ -10,10 +11,17 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    @user.reroll_token
+    render json: {ok: "ok"}, status: :ok
   end
 
   private
-    def session_params
-      params.require(:session).permit :user_name, :password
-    end
+  def set_user
+    @user = User.find_by user_name: session_params[:user_name]
+    render :create_error, status: :unprocessable_entity unless @user
+  end
+
+  def session_params
+    params.require(:session).permit :user_name, :password
+  end
 end

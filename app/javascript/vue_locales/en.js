@@ -8,7 +8,12 @@ var en = {
   showName: "Your name",
   email: "Email",
   login: "Login",
-  signUp: "Sign Up"
+  logout: "Logout",
+  register: "Register",
+  signUp: "Sign Up",
+  rememberMe: "Remember me",
+  sendMessage: "Send",
+  notSignedIn: "You are not signed in."
 };
 
 export default en;
