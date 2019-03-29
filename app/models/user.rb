@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :room_members
   has_many :rooms, through: :room_members
 
+  attr_accessor :auth_token
+
   validates :email, presence: true,
     length: {maximum: Settings.max_email_length},
     format: {with: VALID_EMAIL_REGEX},
@@ -23,6 +25,25 @@ class User < ApplicationRecord
 
   before_save :downcase_email
   before_save :downcase_user_name
+
+  def User.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ?
+      BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
+    BCrypt::Password.create string, cost: cost
+  end
+
+  def User.generate_token
+    SecureRandom.urlsafe_base64
+  end
+
+  def reroll_token
+    self.auth_token = User.generate_token
+    update_attribute :token_digest, User.digest(auth_token)
+  end
+
+  def valid_token?(header_token)
+    BCrypt::Password.new(token_digest) == header_token
+  end
 
   has_secure_password
 
