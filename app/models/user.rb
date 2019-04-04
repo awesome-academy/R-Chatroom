@@ -45,6 +45,11 @@ class User < ApplicationRecord
     BCrypt::Password.new(token_digest) == header_token
   end
 
+  def join_room(room)
+    return if rooms.include? room
+    rooms << room
+  end
+
   has_secure_password
 
   private

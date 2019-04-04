@@ -11,6 +11,12 @@ class ApplicationController < ActionController::API
       end
     end
 
+    def check_authenticated
+      unless @current_user
+        render :unauthenticated, status: :forbidden
+      end
+    end
+
     def check_authorization
       unless @current_user && @user == @current_user
         render :unauthorized, status: :unauthorized
