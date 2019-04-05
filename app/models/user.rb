@@ -50,14 +50,19 @@ class User < ApplicationRecord
     rooms << room
   end
 
+  def leave_room(room)
+    return unless rooms.include? room
+    rooms.delete room
+  end
+
   has_secure_password
 
   private
-    def downcase_email
-      self.email = email.downcase
-    end
+  def downcase_email
+    self.email = email.downcase
+  end
 
-    def downcase_user_name
-      self.user_name = user_name.downcase
-    end
+  def downcase_user_name
+    self.user_name = user_name.downcase
+  end
 end

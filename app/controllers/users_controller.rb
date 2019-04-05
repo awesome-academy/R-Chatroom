@@ -21,14 +21,12 @@ class UsersController < ApplicationController
   end
 
   private
-    def set_user
-      @user = User.find_by id: params[:id]
-      if !@user
-        render :show_error, status: :unprocessable_entity
-      end
-    end
+  def set_user
+    @user = User.find_by id: params[:id]
+    render :show_error, status: :unprocessable_entity unless @user
+  end
 
-    def user_params
-      params.require(:user).permit :user_name, :show_name, :password, :password_confirmation, :email
-    end
+  def user_params
+    params.require(:user).permit :user_name, :show_name, :password, :password_confirmation, :email
+  end
 end

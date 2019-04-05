@@ -42,6 +42,8 @@ en:
   rooms:
     join:
       joined_successfully: "Joined successfully"
+    leave:
+      left_successfully: "Left room successfully"
     join_error:
       already_joined: "Already joined"
       room_not_found: "Room not found"

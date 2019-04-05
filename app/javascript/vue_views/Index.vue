@@ -53,7 +53,7 @@ export default {
     if (!this.getRememberedLoginInfo()) {
       this.notLoggedIn = true;
     } else {
-      this.$router.push("/rooms");
+      this.$router.push("/chat");
     }
   }
 };
