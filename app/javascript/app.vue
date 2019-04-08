@@ -62,12 +62,12 @@ html {
 
 .home-container {
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 4fr 1fr;
   grid-template-rows: 60px 1fr;
   grid-template-areas:
-    "navbar navbar"
-    "rooms main"
-    "rooms main";
+    "navbar navbar navbar"
+    "rooms main info"
+    "rooms main info";
   height: 100vh;
 
   #navbar {
@@ -127,24 +127,46 @@ html {
     #message-panel {
       overflow: auto;
       border-bottom: 1px solid $border;
-      .chat-user {
-        margin-bottom: 6px;
-      }
-
-      .chat-user a {
-        font-family: monospace;
-      }
-
-      .chat-time {
-        color: $grey-light;
-        font-size: small;
-      }
 
       .chat-message {
-        padding: 0.5rem;
+        display: grid;
+        padding: 0.7em;
         border-bottom: 1px solid $white-ter;
+        grid-template-areas:
+          "showname chat-time"
+          "username chat-time"
+          "chat-content chat-content";
+        grid-gap: 0.3em;
+        justify-content: space-between;
+        align-content: space-evenly;
+
+        .showname {
+          grid-area: showname;
+        }
+
+        .username {
+          grid-area: username;
+          color: $grey;
+          font-size: small;
+          font-family: monospace;
+        }
+
+        .chat-time {
+          grid-area: chat-time;
+          color: $grey-light;
+          font-size: small;
+          align-self: center;
+          text-align: right;
+        }
+
+        .chat-content {
+          margin-top: 0.4em;
+          grid-area: chat-content;
+        }
 
         .load-more {
+          grid-row: 1 / span 3;
+          grid-column: 1 / span 2;
           text-align: center;
           font-size: small;
 
@@ -161,6 +183,7 @@ html {
           text-align: center;
           font-size: small;
           color: $grey-light;
+          grid-row: 1 / span 3;
         }
       }
     }
@@ -186,6 +209,29 @@ html {
     }
   }
 
+  #info {
+    grid-area: info;
+    border-left: 1px solid $border;
+
+    .info-item {
+      .info-header {
+        padding: 0.6em;
+        background-color: $grey-lighter;
+        color: $black-bis;
+      }
+
+      .info-content {
+        padding: 0.6em;
+      }
+
+      .info-content-empty {
+        padding: 0.6em;
+        font-size: small;
+        color: $grey-light;
+      }
+    }
+  }
+
   .navbar-brand {
     text-transform: uppercase;
     font-weight: bold;
@@ -194,6 +240,10 @@ html {
 }
 
 .modal-room-join {
+  td {
+    vertical-align: middle;
+  }
+
   .room-list-item {
     .show-name {
       width: 40%;
@@ -204,7 +254,29 @@ html {
     }
 
     .room-action {
+      text-align: right;
       width: 20%;
+    }
+  }
+}
+
+.modal-member-list {
+  .member-list-item {
+    td {
+      vertical-align: middle;
+    }
+
+    .show-name {
+      width: 30%;
+    }
+
+    .user-name {
+      width: 30%;
+    }
+
+    .user-action {
+      text-align: right;
+      width: 40%;
     }
   }
 }

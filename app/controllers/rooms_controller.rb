@@ -1,14 +1,16 @@
 class RoomsController < ApplicationController
-  before_action :find_authenticated_user, only: [:index, :join, :leave, :show, :create]
-  before_action :set_room, only: [:show, :join, :leave]
-  before_action :check_authenticated, only: [:index, :join, :leave, :show, :create]
+  before_action :find_authenticated_user
+  before_action :set_room, except: [:index, :create]
+  before_action :check_authenticated
+  before_action :check_room_authorization, only: [:update, :destroy]
 
   def index
     if params[:user_id]
       user = User.find_by id: params[:user_id]
       if user
         if params[:search_string].present?
-          @rooms = user.rooms.find_by_name(params[:search_string]).paginate page: params[:page], per_page: Settings.rooms_per_page
+          @rooms = user.rooms.find_by_name(params[:search_string])
+            .paginate page: params[:page], per_page: Settings.rooms_per_page
         else
           @rooms = user.rooms.order_by_name.paginate page: params[:page]
         end
@@ -17,9 +19,11 @@ class RoomsController < ApplicationController
       end
     else
       if params[:search_string].present?
-        @rooms = Room.find_by_name(params[:search_string]).paginate page: params[:page], per_page: Settings.rooms_per_page
+        @rooms = Room.find_by_name params[:search_string]
+          .paginate page: params[:page], per_page: Settings.rooms_per_page
       else
-        @rooms = Room.order_by_name.paginate page: params[:page], per_page: Settings.rooms_per_page
+        @rooms = Room.order_by_name.paginate page: params[:page],
+          per_page: Settings.rooms_per_page
       end
     end
   end
@@ -55,6 +59,23 @@ class RoomsController < ApplicationController
     end
   end
 
+  def update
+    if @room.update room_update_params
+      render :show, status: :accepted, location: @room
+    else
+      render :update_error, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @room.destroy
+    if @room.destroyed?
+      render :destroy, status: :accepted, location: @room
+    else
+      render :destroy_error, status: :unprocessable_entity
+    end
+  end
+
   private
   def set_room
     @room = Room.find_by id: params[:id]
@@ -63,5 +84,9 @@ class RoomsController < ApplicationController
 
   def room_params
     params.require(:room).permit :room_name, :show_name, :description
+  end
+
+  def room_update_params
+    params.require(:room).permit :show_name, :description
   end
 end

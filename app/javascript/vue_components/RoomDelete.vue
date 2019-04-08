@@ -3,10 +3,10 @@
     <div class="modal-background" @click="$emit('close')"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{ $t("updateRoom") }}</p>
+        <p class="modal-card-title">{{ $t("deleteRoom") }}</p>
         <button class="delete" aria-label="close" @click="$emit('close')"></button>
       </header>
-      <form @submit.prevent="doUpdate">
+      <form @submit.prevent="doCreate">
         <section class="modal-card-body">
           <div v-if="isLoading" class="notification is-primary">{{ $t("pleaseWait") }}</div>
           <div v-if="isSuccess" class="notification is-success">{{ $t("createdSuccessfully") }}</div>
@@ -15,28 +15,10 @@
               <li v-for="(err, index) in errorMsg" :key="index">{{ err }}</li>
             </ul>
           </div>
-
-          <div class="field">
-            <label class="label">{{ $t("roomName") }}</label>
-            <div class="control">
-              <input v-model="inputRoomName" class="input" type="text" disabled>
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">{{ $t("roomShowName") }}</label>
-            <div class="control">
-              <input v-model="inputShowName" class="input" type="text">
-            </div>
-          </div>
-          <div class="field">
-            <label class="label">{{ $t("description") }}</label>
-            <div class="control">
-              <textarea v-model="inputDescription" class="textarea"></textarea>
-            </div>
-          </div>
+          <p>{{ $t("deleteRoomConfirmation") }}</p>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-primary">{{ $t("update") }}</button>
+          <button class="button is-danger">{{ $t("delete") }}</button>
           <button class="button" @click="$emit('close')">{{ $t("close") }}</button>
         </footer>
       </form>
@@ -70,17 +52,11 @@ export default {
   },
   props: ["roomObj"],
   methods: {
-    doUpdate() {
+    doCreate() {
       this.isLoading = true;
       axios
-        .put(
+        .delete(
           `${this.storedApiUrl}/rooms/${this.roomObj.id}`,
-          {
-            room: {
-              show_name: this.inputShowName,
-              description: this.inputDescription
-            }
-          },
           {
             auth: {
               username: this.storedUsername,

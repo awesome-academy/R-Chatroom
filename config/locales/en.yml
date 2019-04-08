@@ -49,3 +49,5 @@ en:
       room_not_found: "Room not found"
     show_error:
       room_not_found: "Room not found"
+    destroy_error:
+      destroyed_successfully: "This room is deleted successfully"

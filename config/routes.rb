@@ -6,7 +6,10 @@ Rails.application.routes.draw do
     resources :rooms, only: [:index], format: "json"
   end
 
-  resources :rooms, format: "json"
+  resources :rooms, format: "json" do
+    resources :users, only: [:index, :destroy], format: "json"
+  end
+
   resources :sessions, only: [:create, :destroy], format: "json"
 
   resource :user, only: [:show], format: "json"

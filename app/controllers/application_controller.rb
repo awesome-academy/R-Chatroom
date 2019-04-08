@@ -20,4 +20,8 @@ class ApplicationController < ActionController::API
       render :unauthorized, status: :unauthorized
     end
   end
+
+  def check_room_authorization
+    render :unauthorized, status: :unauthorized unless @room.admins.include? @current_user
+  end
 end

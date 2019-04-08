@@ -1,9 +1,11 @@
 class Room < ApplicationRecord
   VALID_ROOM_NAME_REGEX = /\A[a-z0-9\-_.]+\z/
 
-  has_many :messages
-  has_many :room_members
+  has_many :messages, dependent: :delete_all
+  has_many :room_members, dependent: :delete_all
+  has_many :admin_members, ->{where admin: true}, class_name: :RoomMember
   has_many :users, through: :room_members
+  has_many :admins, through: :admin_members, class_name: :User, source: :user
 
   attr_accessor :user_created_id
 
@@ -19,7 +21,7 @@ class Room < ApplicationRecord
     length: {minimum: Settings.min_description_length}
 
   before_save :downcase_room_name
-  after_save :set_admin
+  after_create :set_admin
 
   scope :order_by_name, ->{order show_name: :asc}
   scope :find_by_name, ->(search_string){
@@ -27,8 +29,16 @@ class Room < ApplicationRecord
       keyword: "%#{search_string}%"
   }
 
-  def has_joined?(user)
+  def has_joined? user
     users.include? user
+  end
+
+  def is_admin? user
+    admins.include? user
+  end
+
+  def kick user
+    users.delete user
   end
 
   private

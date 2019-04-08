@@ -8,7 +8,7 @@
           <li v-for="(err, index) in errorMsg" :key="index">{{ err }}</li>
         </ul>
       </div>
-      <form v-on:submit="doRegister">
+      <form @submit.prevent="doRegister">
         <div class="field">
           <label class="label">{{ $t("username") }}</label>
           <div class="control">

@@ -3741,6 +3741,11 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
+lines-to-paragraphs@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/lines-to-paragraphs/-/lines-to-paragraphs-1.0.3.tgz#9b2c1b8d2f2840934c33aea84ab30bf9b9c820e2"
+  integrity sha1-mywbjS8oQJNMM66oSrML+bnIIOI=
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"

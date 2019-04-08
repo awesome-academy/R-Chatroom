@@ -30,7 +30,7 @@ class MessagesChannel < ApplicationCable::Channel
     formatted_messages = format_messages messages
     ActionCable.server.broadcast "user_#{current_user.id}", {
       type: "receive_from_id",
-      behind: messages.first ? messages.first.total_messages_behind(@room.id) : 0,
+      behind: messages.first ? messages.first.total_messages_behind : 0,
       messages: formatted_messages
     }
   end
@@ -58,6 +58,7 @@ class MessagesChannel < ApplicationCable::Channel
       id: message.id,
       user_id: message.user_id,
       room_id: message.room_id,
+      show_name: message.user.show_name,
       username: message.user.user_name,
       content: message.content,
       created_at: message.created_at,
