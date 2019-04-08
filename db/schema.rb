@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_28_103354) do
+ActiveRecord::Schema.define(version: 2019_04_01_064825) do
 
   create_table "last_reads", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "reader_id"
@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 2019_03_28_103354) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["message_id"], name: "index_last_reads_on_message_id"
+    t.index ["reader_id", "message_id"], name: "index_last_reads_on_reader_id_and_message_id", unique: true
     t.index ["reader_id"], name: "index_last_reads_on_reader_id"
   end
 
@@ -58,6 +59,7 @@ ActiveRecord::Schema.define(version: 2019_03_28_103354) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["room_name"], name: "index_rooms_on_room_name", unique: true
   end
 
   create_table "tags", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

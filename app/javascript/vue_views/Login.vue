@@ -17,6 +17,12 @@
             <input v-model="inputPassword" class="input" type="password">
           </div>
         </div>
+        <div class="field">
+          <label class="checkbox">
+            <input type="checkbox" v-model="remember">
+            {{ $t("rememberMe") }}
+          </label>
+        </div>
         <div class="control">
           <button class="button is-primary">{{ $t("login") }}</button>
         </div>
@@ -40,7 +46,8 @@ export default {
       inputPassword: null,
       errorMsg: null,
       isSuccess: false,
-      isLoading: false
+      isLoading: false,
+      remember: false
     };
   },
   computed: {
@@ -64,7 +71,18 @@ export default {
               username: this.inputUsername,
               authToken: result.data.data.token
             });
-            this.$router.push("/");
+
+            if (this.remember == false) {
+              sessionStorage.setItem("id", result.data.data.user.id);
+              sessionStorage.setItem("username", this.inputUsername);
+              sessionStorage.setItem("authToken", result.data.data.token);
+            } else {
+              localStorage.setItem("id", result.data.data.user.id);
+              localStorage.setItem("username", this.inputUsername);
+              localStorage.setItem("authToken", result.data.data.token);
+            }
+
+            this.$router.push("/rooms");
           }, 500);
         })
         .catch(e => {
