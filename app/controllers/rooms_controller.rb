@@ -1,14 +1,26 @@
 class RoomsController < ApplicationController
-  before_action :find_authenticated_user, only: [:index, :join, :show, :create]
-  before_action :set_room, only: [:show, :join]
-  before_action :check_authenticated, only: [:index, :join, :show, :create]
+  before_action :find_authenticated_user, only: [:index, :join, :leave, :show, :create]
+  before_action :set_room, only: [:show, :join, :leave]
+  before_action :check_authenticated, only: [:index, :join, :leave, :show, :create]
 
   def index
     if params[:user_id]
       user = User.find_by id: params[:user_id]
-      @rooms = user.rooms.order_by_name.paginate(page: params[:page]) if user
+      if user
+        if params[:search_string].present?
+          @rooms = user.rooms.find_by_name(params[:search_string]).paginate page: params[:page], per_page: Settings.rooms_per_page
+        else
+          @rooms = user.rooms.order_by_name.paginate page: params[:page]
+        end
+      else
+        render status: :unprocessable_entity
+      end
     else
-      @rooms = Room.order_by_name.paginate page: params[:page]
+      if params[:search_string].present?
+        @rooms = Room.find_by_name(params[:search_string]).paginate page: params[:page], per_page: Settings.rooms_per_page
+      else
+        @rooms = Room.order_by_name.paginate page: params[:page], per_page: Settings.rooms_per_page
+      end
     end
   end
 
@@ -18,6 +30,15 @@ class RoomsController < ApplicationController
     else
       @error_message = I18n.t "rooms.join_error.already_joined"
       render :join_error, status: :unprocessable_entity
+    end
+  end
+
+  def leave
+    if @current_user.leave_room @room
+      render :leave, status: :created, location: @room
+    else
+      @error_message = I18n.t "rooms.leave_error.not_joined"
+      render :leave_error, status: :unprocessable_entity
     end
   end
 
@@ -35,14 +56,12 @@ class RoomsController < ApplicationController
   end
 
   private
-    def set_room
-      @room = Room.find_by id: params[:id]
-      if !@room
-        render :show_error, status: :unprocessable_entity
-      end
-    end
+  def set_room
+    @room = Room.find_by id: params[:id]
+    render :show_error, status: :unprocessable_entity unless @room
+  end
 
-    def room_params
-      params.require(:room).permit :room_name, :show_name, :description
-    end
+  def room_params
+    params.require(:room).permit :room_name, :show_name, :description
+  end
 end

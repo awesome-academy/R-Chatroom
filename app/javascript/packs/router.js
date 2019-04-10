@@ -1,6 +1,6 @@
 import Vue from "vue"
 import Router from "vue-router"
-import Rooms from "../vue_views/Rooms.vue";
+import Chat from "../vue_views/Chat.vue";
 import Register from "../vue_views/Register.vue";
 import Login from "../vue_views/Login.vue";
 import Logout from "../vue_views/Logout.vue";
@@ -17,10 +17,10 @@ export default new Router({
       component: Index
     },
     {
-      path: "/rooms",
-      name: "rooms",
+      path: "/chat",
+      name: "chat",
       meta: { title: "R-Chatroom" },
-      component: Rooms
+      component: Chat
     },
     {
       path: "/register",

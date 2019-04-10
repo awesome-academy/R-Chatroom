@@ -1,35 +1,54 @@
 <template>
   <div class="home-container">
-    <nav id="navbar" class="navbar">
+    <nav id="navbar" class="navbar is-light">
       <div class="navbar-brand">
         <a class="navbar-item">R-chatroom</a>
       </div>
       <div class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item">
-            Logged in as
-            <a href="#" style="margin-left: 4px;">{{ storedUsername }}</a>.
-          </div>
-          <div class="navbar-item">
-            <router-link to="/logout" class="button">{{ $t("logout") }}</router-link>
+            <div class="buttons">
+              <router-link to="/account" class="button is-light">{{ $t("account") }}</router-link>
+              <router-link to="/logout" class="button is-light">{{ $t("logout") }}</router-link>
+            </div>
           </div>
         </div>
       </div>
     </nav>
-    <aside id="rooms" class="menu">
-      <ul class="menu-list">
-        <li v-for="room in rooms" :key="room.id">
-          <a
-            @click="selectedRoom = room.id"
-            v-bind:class="{'room-selected': selectedRoom == room.id}"
-          >
-            <div class="show-name">{{ room.show_name }}</div>
-            <div class="room-name">{{ room.room_name }}</div>
-          </a>
-        </li>
-      </ul>
+    <aside id="rooms">
+      <div class="menu" id="room-list">
+        <p class="menu-label">Groups</p>
+        <ul class="menu-list">
+          <li v-for="room in rooms" :key="room.id">
+            <a
+              @click="selectedRoom = room.id"
+              v-bind:class="{'room-selected': selectedRoom == room.id}"
+            >
+              <div class="show-name">{{ room.show_name }}</div>
+              <div class="room-name">{{ room.room_name }}</div>
+            </a>
+          </li>
+        </ul>
+        <p class="menu-label">Friends</p>
+      </div>
+      <div id="room-join" class="is-white">
+        <a class="button" @click="showRoomJoin = true">Join Room</a>
+      </div>
+      <div id="room-add" class="is-white">
+        <a class="button" @click="showRoomCreate = true">Add Room</a>
+      </div>
     </aside>
-    <RoomShow :RoomId="selectedRoom"/>
+    <RoomShow v-if="selectedRoom != null" :RoomId="selectedRoom"/>
+    <RoomJoin
+      v-if="showRoomJoin"
+      @close="showRoomJoin = false"
+      @reloadJoinedRoomList="getRoomList"
+    />
+    <RoomCreate
+      v-if="showRoomCreate"
+      @close="showRoomCreate = false"
+      @reloadJoinedRoomList="getRoomList"
+    />
   </div>
 </template>
 
@@ -41,22 +60,28 @@ import axios from "axios";
 import { mapState } from "vuex";
 import ActionCable from "actioncable";
 import RoomShow from "../vue_components/RoomShow.vue";
+import RoomJoin from "../vue_components/RoomJoin.vue";
+import RoomCreate from "../vue_components/RoomCreate.vue";
 
 var ac = {};
 
 export default {
-  name: "rooms",
+  name: "chat",
   data() {
     return {
       userDetail: {},
       rooms: [],
       messages: [],
       inputMessage: null,
-      selectedRoom: null
+      selectedRoom: null,
+      showRoomJoin: false,
+      showRoomCreate: false
     };
   },
   components: {
-    RoomShow
+    RoomShow,
+    RoomJoin,
+    RoomCreate
   },
   computed: {
     ...mapState([
@@ -84,7 +109,7 @@ export default {
     },
     async getRoomList() {
       await axios
-        .get(`${this.storedApiUrl}/rooms`, {
+        .get(`${this.storedApiUrl}/users/${this.storedUserId}/rooms`, {
           auth: {
             username: this.storedUsername,
             password: this.storedAuthToken

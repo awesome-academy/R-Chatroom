@@ -78,10 +78,44 @@ html {
   #rooms {
     grid-area: rooms;
     border-right: 1px solid $border;
-    padding: 6px;
+    display: grid;
+    grid-template-areas:
+      "room-list room-list"
+      "room-join room-add";
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 60px;
 
-    .room-selected {
-      font-weight: bold;
+    #room-list {
+      grid-area: room-list;
+      border-bottom: 1px solid $border;
+      padding: 1em;
+
+      .room-selected {
+        font-weight: bold;
+      }
+
+      .show-name {
+        text-transform: uppercase;
+        font-size: small;
+      }
+
+      .room-name {
+        text-transform: lowercase;
+        font-size: x-small;
+        color: $grey-dark;
+      }
+    }
+
+    #room-join {
+      grid-area: room-join;
+      justify-self: center;
+      align-self: center;
+    }
+
+    #room-add {
+      grid-area: room-add;
+      justify-self: center;
+      align-self: center;
     }
   }
 
@@ -109,6 +143,25 @@ html {
       .chat-message {
         padding: 0.5rem;
         border-bottom: 1px solid $white-ter;
+
+        .load-more {
+          text-align: center;
+          font-size: small;
+
+          a {
+            color: $grey-light;
+
+            &:hover {
+              color: $grey;
+            }
+          }
+        }
+
+        .no-message {
+          text-align: center;
+          font-size: small;
+          color: $grey-light;
+        }
       }
     }
 
@@ -138,16 +191,21 @@ html {
     font-weight: bold;
     font-size: 1.2rem;
   }
+}
 
-  .show-name {
-    text-transform: uppercase;
-    font-size: small;
-  }
+.modal-room-join {
+  .room-list-item {
+    .show-name {
+      width: 40%;
+    }
 
-  .room-name {
-    text-transform: lowercase;
-    font-size: x-small;
-    color: $grey-dark;
+    .room-name {
+      width: 40%;
+    }
+
+    .room-action {
+      width: 20%;
+    }
   }
 }
 </style>

@@ -9,7 +9,8 @@ export default new Vuex.Store({
     storedAuthToken: null,
     storedUserId: null,
     storedApiUrl: "http://0.0.0.0:3000",
-    storedWsUrl: "ws://0.0.0.0:3000"
+    storedWsUrl: "ws://0.0.0.0:3000",
+    storedMsgNum: 5
   },
   mutations: {
     setAuthInfo(state, payload) {

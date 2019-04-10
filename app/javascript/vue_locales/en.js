@@ -11,9 +11,17 @@ var en = {
   logout: "Logout",
   register: "Register",
   signUp: "Sign Up",
+  account: "Account",
   rememberMe: "Remember me",
   sendMessage: "Send",
-  notSignedIn: "You are not signed in."
+  notSignedIn: "You are not signed in.",
+  search: "Search",
+  nothingFound: "We can't find anything.",
+  moreMessages: "Load more messages ({remainingMessages} left)",
+  createNewRoom: "Create a new room",
+  roomList: "Room List",
+  createdSuccessfully: "Created successfully!",
+  noMessage: "There is no message here. Start by sending some messages."
 };
 
 export default en;
