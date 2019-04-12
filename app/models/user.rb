@@ -26,6 +26,12 @@ class User < ApplicationRecord
   before_save :downcase_email
   before_save :downcase_user_name
 
+  scope :order_by_name, ->{order show_name: :asc}
+  scope :find_by_name, ->(search_string){
+    where "show_name LIKE :keyword OR user_name LIKE :keyword",
+      keyword: "%#{search_string}%"
+  }
+
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ?
       BCrypt::Engine::MIN_COST : BCrypt::Engine.cost

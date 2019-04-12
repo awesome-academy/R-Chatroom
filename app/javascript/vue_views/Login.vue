@@ -4,7 +4,7 @@
       <div v-if="isLoading" class="notification is-primary">{{ $t("pleaseWait") }}</div>
       <div v-if="isSuccess" class="notification is-success">{{ $t("signedInSuccessfully")}}</div>
       <div v-if="errorMsg" class="notification is-warning">{{ errorMsg }}</div>
-      <form v-on:submit="doLogin">
+      <form @submit.prevent="doLogin">
         <div class="field">
           <label class="label">{{ $t("username") }}</label>
           <div class="control">
@@ -82,7 +82,7 @@ export default {
               localStorage.setItem("authToken", result.data.data.token);
             }
 
-            this.$router.push("/rooms");
+            this.$router.push("/chat");
           }, 500);
         })
         .catch(e => {

@@ -13,7 +13,7 @@
       </div>
       <RoomMessage v-for="message in messages" :key="`${RoomId}-${message.id}`" :message="message"/>
     </div>
-    <form id="write-panel" v-on:submit="doSend">
+    <form id="write-panel" @submit.prevent="doSend">
       <textarea
         rows="6"
         id="input-message"
@@ -104,7 +104,10 @@ export default {
             } else if (data.type == "receive_from_id") {
               this.messages = [...data.messages, ...this.messages];
             }
-            this.messagesBehind = data.behind;
+
+            if (data.type == "receive_latest" || data.type == "receive_from_id") {
+              this.messagesBehind = data.behind;
+            }
           },
           sendMessage: data => {
             return messagesCable.channel.perform("receive", data);

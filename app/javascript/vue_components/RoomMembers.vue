@@ -3,11 +3,11 @@
     <div class="modal-background" @click="$emit('close')"></div>
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{ $t("roomList") }}</p>
+        <p class="modal-card-title">{{ $t("memberList") }}</p>
         <button class="delete" aria-label="close" @click="$emit('close')"></button>
       </header>
-      <section class="modal-card-body modal-room-join">
-        <form @submit.prevent="getAllRoomList">
+      <section class="modal-card-body modal-member-list">
+        <form @submit.prevent="getMemberList">
           <div class="field has-addons has-addons-centered">
             <div class="control">
               <input class="input" type="text" v-model="searchString">
@@ -17,14 +17,13 @@
             </div>
           </div>
         </form>
-        <div v-if="rooms.length > 0">
-          <table class="room-list table is-fullwidth">
-            <tr class="room-list-item" v-for="room in rooms" :key="room.id">
-              <td class="show-name">{{ room.show_name }}</td>
-              <td class="room-name">{{ room.room_name }}</td>
-              <td class="room-action">
-                <a class="button is-primary" v-if="!room.joined" @click="joinRoom(room.id)">{{ $t("join") }}</a>
-                <a class="button is-danger" v-else @click="leaveRoom(room.id)">{{ $t("leave") }}</a>
+        <div v-if="members.length > 0">
+          <table class="member-list table is-fullwidth">
+            <tr class="member-list-item" v-for="member in members" :key="member.id">
+              <td class="show-name">{{ member.show_name }}</td>
+              <td class="user-name">{{ member.user_name }}</td>
+              <td class="user-action">
+                <a class="button is-danger" @click="removeMember(member.id)">{{ $t("remove") }}</a>
               </td>
             </tr>
           </table>
@@ -32,14 +31,14 @@
             v-model="page.currentPage"
             :records="page.totalEntries"
             :per-page="page.perPage"
-            @paginate="getAllRoomList"
+            @paginate="getMemberList"
             :options="{theme: 'bulma'}"
           ></Pagination>
         </div>
         <div class v-else>{{ $t("nothingFound") }}</div>
       </section>
       <footer class="modal-card-foot">
-        <button class="button" @click="$emit('close')">Close</button>
+        <button class="button" @click="$emit('close')">{{ $t("close") }}</button>
       </footer>
     </div>
   </div>
@@ -58,7 +57,7 @@ export default {
         perPage: null,
         totalEntries: null
       },
-      rooms: [],
+      members: [],
       searchString: ""
     };
   },
@@ -74,13 +73,13 @@ export default {
       "storedUsername"
     ])
   },
-  props: [""],
+  props: ["roomObj"],
   methods: {
-    async getAllRoomList() {
+    async getMemberList() {
       let page = this.page.currentPage;
       await axios
         .get(
-          `${this.storedApiUrl}/rooms?search_string=${this.searchString}&page=${page}`,
+          `${this.storedApiUrl}/rooms/${this.roomObj.id}/users?search_string=${this.searchString}&page=${page}`,
           {
             auth: {
               username: this.storedUsername,
@@ -89,7 +88,7 @@ export default {
           }
         )
         .then(result => {
-          this.rooms = result.data.data.rooms;
+          this.members = result.data.data.users;
           this.page.perPage = result.data.data.page.per_page;
           this.page.totalEntries = result.data.data.page.total_entries;
         })
@@ -97,13 +96,10 @@ export default {
           console.log(e);
         });
     },
-    async joinRoom(roomId) {
+    async removeMember(memberId) {
       await axios
-        .post(
-          `${this.storedApiUrl}/rooms/join`,
-          {
-            id: roomId
-          },
+        .delete(
+          `${this.storedApiUrl}/rooms/${this.roomObj.id}/users/${memberId}`,
           {
             auth: {
               username: this.storedUsername,
@@ -112,41 +108,15 @@ export default {
           }
         )
         .then(result => {
-          this.getAllRoomList();
-          this.reloadJoinedRoomList();
+          this.getMemberList();
         })
         .catch(e => {
           console.log(e);
         });
-    },
-    async leaveRoom(roomId) {
-      await axios
-        .post(
-          `${this.storedApiUrl}/rooms/leave`,
-          {
-            id: roomId
-          },
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
-        )
-        .then(result => {
-          this.getAllRoomList(this.page.currentPage);
-          this.reloadJoinedRoomList();
-        })
-        .catch(e => {
-          console.log(e);
-        });
-    },
-    reloadJoinedRoomList() {
-      this.$emit("reloadJoinedRoomList");
     }
   },
   async mounted() {
-    await this.getAllRoomList();
+    await this.getMemberList();
   }
 };
 </script>

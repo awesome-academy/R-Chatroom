@@ -17,27 +17,27 @@
           </div>
 
           <div class="field">
-            <label class="label">Room Name</label>
+            <label class="label">{{ $t("roomName") }}</label>
             <div class="control">
               <input v-model="inputRoomName" class="input" type="text">
             </div>
           </div>
           <div class="field">
-            <label class="label">Show Name</label>
+            <label class="label">{{ $t("roomShowName") }}</label>
             <div class="control">
               <input v-model="inputShowName" class="input" type="text">
             </div>
           </div>
           <div class="field">
-            <label class="label">Description</label>
+            <label class="label">{{ $t("description") }}</label>
             <div class="control">
               <textarea v-model="inputDescription" class="textarea"></textarea>
             </div>
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-primary">Create</button>
-          <button class="button" @click="$emit('close')">Close</button>
+          <button class="button is-primary">{{ $t("create") }}</button>
+          <button class="button" @click="$emit('close')">{{ $t("close") }}</button>
         </footer>
       </form>
     </div>

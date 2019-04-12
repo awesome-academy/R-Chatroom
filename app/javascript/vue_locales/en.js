@@ -21,7 +21,29 @@ var en = {
   createNewRoom: "Create a new room",
   roomList: "Room List",
   createdSuccessfully: "Created successfully!",
-  noMessage: "There is no message here. Start by sending some messages."
+  noMessage: "There is no message here. Start by sending some messages.",
+  updateRoom: "Update room information",
+  create: "Create",
+  update: "Update",
+  close: "Close",
+  deleteRoom: "Delete room",
+  deleteRoomConfirmation: "Do you really want to delete this room?",
+  delete: "Delete",
+  memberList: "Member List",
+  description: "Description",
+  missingDescriptionMsg: "There is no description for this room.",
+  adminActions: "Admin actions",
+  members: "Members",
+  delete: "Delete",
+  groups: "Groups",
+  friends: "Friends",
+  joinRoom: "Join Room",
+  addRoom: "Add Room",
+  roomName: "Room Name",
+  roomShowName: "Show Name",
+  remove: "Remove",
+  join: "Join",
+  leave: "Leave"
 };
 
 export default en;

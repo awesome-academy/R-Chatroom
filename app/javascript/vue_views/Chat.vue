@@ -17,7 +17,7 @@
     </nav>
     <aside id="rooms">
       <div class="menu" id="room-list">
-        <p class="menu-label">Groups</p>
+        <p class="menu-label">{{ $t("groups") }}</p>
         <ul class="menu-list">
           <li v-for="room in rooms" :key="room.id">
             <a
@@ -29,16 +29,51 @@
             </a>
           </li>
         </ul>
-        <p class="menu-label">Friends</p>
+        <p class="menu-label">{{ $t("friends") }}</p>
       </div>
       <div id="room-join" class="is-white">
-        <a class="button" @click="showRoomJoin = true">Join Room</a>
+        <a class="button" @click="showRoomJoin = true">{{ $t("joinRoom") }}</a>
       </div>
       <div id="room-add" class="is-white">
-        <a class="button" @click="showRoomCreate = true">Add Room</a>
+        <a class="button" @click="showRoomCreate = true">{{ $t("addRoom") }}</a>
       </div>
     </aside>
     <RoomShow v-if="selectedRoom != null" :RoomId="selectedRoom"/>
+    <aside id="info" v-if="selectedRoomObj">
+      <div class="info-item">
+        <div class="info-header">{{ $t("description") }}</div>
+        <p class="info-content content" v-if="selectedRoomObj.description" v-html="roomDescription"></p>
+        <p class="info-content-empty" v-else>{{ $t("missingDescriptionMsg") }}</p>
+      </div>
+      <div class="info-item" v-if="selectedRoomObj.is_admin == true">
+        <div class="info-header">{{ $t("adminActions") }}</div>
+        <p class="info-content">
+          <button @click="showUpdateRoom = true" class="button is-primary is-small">{{ $t("update") }}</button>
+          <button @click="showMembersRoom = true" class="button is-primary is-small">{{ $t("members") }}</button>
+          <button @click="showDeleteRoom = true" class="button is-danger is-small">{{ $t("delete") }}</button>
+        </p>
+      </div>
+    </aside>
+    <RoomUpdate
+      v-if="showUpdateRoom"
+      :roomObj="selectedRoomObj"
+      @close="showUpdateRoom = false"
+      @reloadJoinedRoomList="getRoomList"
+      @reloadCurrentRoom="selectedRoom = selectedRoomObj.id"
+    />
+    <RoomMembers
+      v-if="showMembersRoom"
+      :roomObj="selectedRoomObj"
+      @close="showMembersRoom = false"
+      @reloadCurrentRoom="selectedRoom = selectedRoomObj.id"
+    />
+    <RoomDelete
+      v-if="showDeleteRoom"
+      :roomObj="selectedRoomObj"
+      @close="showDeleteRoom = false"
+      @reloadJoinedRoomList="getRoomList"
+      @reloadCurrentRoom="selectedRoom = selectedRoomObj.id"
+    />
     <RoomJoin
       v-if="showRoomJoin"
       @close="showRoomJoin = false"
@@ -59,9 +94,13 @@
 import axios from "axios";
 import { mapState } from "vuex";
 import ActionCable from "actioncable";
+import paragraphs from "lines-to-paragraphs";
 import RoomShow from "../vue_components/RoomShow.vue";
 import RoomJoin from "../vue_components/RoomJoin.vue";
 import RoomCreate from "../vue_components/RoomCreate.vue";
+import RoomUpdate from "../vue_components/RoomUpdate.vue";
+import RoomDelete from "../vue_components/RoomDelete.vue";
+import RoomMembers from "../vue_components/RoomMembers.vue";
 
 var ac = {};
 
@@ -75,13 +114,19 @@ export default {
       inputMessage: null,
       selectedRoom: null,
       showRoomJoin: false,
-      showRoomCreate: false
+      showRoomCreate: false,
+      showUpdateRoom: false,
+      showMembersRoom: false,
+      showDeleteRoom: false
     };
   },
   components: {
     RoomShow,
     RoomJoin,
-    RoomCreate
+    RoomCreate,
+    RoomUpdate,
+    RoomDelete,
+    RoomMembers
   },
   computed: {
     ...mapState([
@@ -89,7 +134,17 @@ export default {
       "storedAuthToken",
       "storedUserId",
       "storedUsername"
-    ])
+    ]),
+    selectedRoomObj() {
+      return this.rooms.find(room => room.id == this.selectedRoom);
+    },
+    roomDescription() {
+      if (this.selectedRoomObj.description){
+        return paragraphs(this.selectedRoomObj.description);
+      } else {
+        return null;
+      }
+    }
   },
   methods: {
     async getUserDetail() {
