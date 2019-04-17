@@ -2,4 +2,4 @@ Hi <%= @user.user_name %>,
 
 Click on the link below to activate your account:
 
-<%= url_for "#{root_url}#/activate?id=#{@user.id}&token=#{@user.activation_token}" %>
+<%= "#{root_url}#/activate?id=#{@user.id}&token=#{@user.activation_token}" %>

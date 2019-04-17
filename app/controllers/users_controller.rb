@@ -1,7 +1,6 @@
 class UsersController < ApplicationController
   before_action :find_authenticated_user, only: [:show, :destroy]
   before_action :set_user, only: [:show, :destroy]
-  before_action :check_authorization, only: [:show]
   before_action :set_room, only: [:destroy]
   before_action :check_room_authorization, only: [:destroy]
 

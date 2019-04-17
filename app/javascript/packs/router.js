@@ -5,6 +5,7 @@ import Register from "../vue_views/Register.vue";
 import Login from "../vue_views/Login.vue";
 import Logout from "../vue_views/Logout.vue";
 import Index from "../vue_views/Index.vue";
+import Activate from "../vue_views/Activate.vue"
 
 Vue.use(Router);
 
@@ -39,6 +40,12 @@ export default new Router({
       name: "logout",
       meta: { title: "logout" },
       component: Logout
+    },
+    {
+      path: "/activate",
+      name: "activate",
+      meta: { title: "Activate" },
+      component: Activate
     }
   ]
 });
