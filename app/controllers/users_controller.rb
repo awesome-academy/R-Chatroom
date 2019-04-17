@@ -43,6 +43,7 @@ class UsersController < ApplicationController
     @user = User.new user_params
 
     if @user.save
+      @user.send_activation_email
       render :show, status: :created, location: @user
     else
       render :create_error, status: :unprocessable_entity

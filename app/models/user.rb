@@ -10,7 +10,7 @@ class User < ApplicationRecord
   has_many :room_members
   has_many :rooms, through: :room_members
 
-  attr_accessor :auth_token
+  attr_accessor :auth_token, :activation_token
 
   validates :email, presence: true,
     length: {maximum: Settings.max_email_length},
@@ -25,6 +25,7 @@ class User < ApplicationRecord
 
   before_save :downcase_email
   before_save :downcase_user_name
+  before_create :create_activation_digest
 
   scope :order_by_name, ->{order show_name: :asc}
   scope :find_by_name, ->(search_string){
@@ -32,7 +33,7 @@ class User < ApplicationRecord
       keyword: "%#{search_string}%"
   }
 
-  def User.digest(string)
+  def User.digest string
     cost = ActiveModel::SecurePassword.min_cost ?
       BCrypt::Engine::MIN_COST : BCrypt::Engine.cost
     BCrypt::Password.create string, cost: cost
@@ -47,18 +48,31 @@ class User < ApplicationRecord
     update_attribute :token_digest, User.digest(auth_token)
   end
 
-  def valid_token?(header_token)
+  def valid_token? header_token
     BCrypt::Password.new(token_digest) == header_token
   end
 
-  def join_room(room)
+  def valid_activation_token? activation_token
+    BCrypt::Password.new(activation_digest) == activation_token
+  end
+
+  def activate
+    update_attribute :activated, true
+    update_attribute :activated_at, Time.zone.now
+  end
+
+  def join_room room
     return if rooms.include? room
     rooms << room
   end
 
-  def leave_room(room)
+  def leave_room room
     return unless rooms.include? room
     rooms.delete room
+  end
+
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
   end
 
   has_secure_password
@@ -70,5 +84,10 @@ class User < ApplicationRecord
 
   def downcase_user_name
     self.user_name = user_name.downcase
+  end
+
+  def create_activation_digest
+    self.activation_token  = User.generate_token
+    self.activation_digest = User.digest activation_token
   end
 end

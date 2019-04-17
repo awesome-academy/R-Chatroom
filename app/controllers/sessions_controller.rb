@@ -3,9 +3,15 @@ class SessionsController < ApplicationController
 
   def create
     if @user.authenticate session_params[:password]
-      @user.reroll_token
-      render :create_success, status: :created
+      if !@user.activated?
+        @error_message = I18n.t "not_activated"
+        render :create_error, status: :precondition_failed
+      else
+        @user.reroll_token
+        render :create_success, status: :created
+      end
     else
+      @error_message = I18n.t "wrong_password"
       render :create_error, status: :unprocessable_entity
     end
   end

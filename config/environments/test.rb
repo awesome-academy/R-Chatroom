@@ -31,6 +31,10 @@ Rails.application.configure do
   # Store uploaded files on the local file system in a temporary directory
   config.active_storage.service = :test
 
+  host = "0.0.0.0:3000"
+
+  config.action_mailer.default_url_options = {host: host, protocol: "http"}
+
   config.action_mailer.perform_caching = false
 
   # Tell Action Mailer not to deliver emails to the real world.
