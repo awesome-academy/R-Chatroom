@@ -33,12 +33,12 @@ en:
   hello: "Hello world"
   unauthorized_error: "You are not authorized to access this content"
   unauthenticated_error: "You must be logged in to access this content"
+  account_activation: "Account Activation"
+  wrong_password: "Password is wrong"
+  not_activated: "This user account is not activated"
   users:
     show_error:
       user_not_found: "User not found"
-  sessions:
-    create_error:
-      wrong_password: "Password is wrong"
   rooms:
     join:
       joined_successfully: "Joined successfully"

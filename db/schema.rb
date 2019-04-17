@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_064825) do
+ActiveRecord::Schema.define(version: 2019_04_12_044407) do
 
   create_table "last_reads", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "reader_id"
@@ -89,6 +89,9 @@ ActiveRecord::Schema.define(version: 2019_04_01_064825) do
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "activation_digest"
+    t.boolean "activated", default: false
+    t.datetime "activated_at"
     t.index ["token_digest"], name: "index_users_on_token_digest", unique: true
   end
 

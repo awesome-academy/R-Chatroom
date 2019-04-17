@@ -1,0 +1,7 @@
+<h1>Account Activation</h1>
+
+<p>Hi <%= @user.user_name %>,</p>
+
+<p>Click on the link below to activate your account:</p>
+
+<%= link_to "Activate", url_for("#{root_url}#/activate?id=#{@user.id}&token=#{@user.activation_token}") %>
