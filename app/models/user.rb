@@ -1,6 +1,6 @@
 class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  VALID_USER_NAME_REGEX = /\A[a-z0-9]+\z/
+  VALID_USER_NAME_REGEX = /\A[a-z0-9\-_.]+\z/
 
   has_many :messages, dependent: :destroy
   has_many :relationships, foreign_key: :relating_id, dependent: :destroy
