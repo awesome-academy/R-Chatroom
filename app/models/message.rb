@@ -7,6 +7,8 @@ class Message < ApplicationRecord
   has_many :last_reads
   has_many :notifications
 
+  validates :content, presence: true
+
   scope :find_by_room, ->(id){where room_id: id}
   scope :find_less_than_id, ->(id){where "id < ?", id}
   scope :find_more_than_id, ->(id){where "id > ?", id}

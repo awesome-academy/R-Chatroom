@@ -6,7 +6,7 @@
         <p class="modal-card-title">{{ $t("createNewRoom") }}</p>
         <button class="delete" aria-label="close" @click="$emit('close')"></button>
       </header>
-      <form v-on:submit="doCreate">
+      <form @submit.prevent="doCreate">
         <section class="modal-card-body">
           <div v-if="isLoading" class="notification is-primary">{{ $t("pleaseWait") }}</div>
           <div v-if="isSuccess" class="notification is-success">{{ $t("createdSuccessfully") }}</div>

@@ -48,7 +48,12 @@ var en = {
   id: "User ID",
   activationToken: "Activation Token",
   activate: "Activate",
-  activatedSuccessfully: "Activated successfully!"
+  activatedSuccessfully: "Activated successfully!",
+  nothingHere: "Nothing here",
+  disconnected: "Disconnected",
+  noRoom: "¯\\_(ツ)_/¯",
+  serverRejected: "Server has rejected this connection.",
+  reloadPage: "Reload page"
 };
 
 export default en;

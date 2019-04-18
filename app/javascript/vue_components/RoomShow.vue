@@ -13,8 +13,10 @@
       </div>
       <RoomMessage v-for="message in messages" :key="`${RoomId}-${message.id}`" :message="message"/>
     </div>
+    <div id="error"><div class="error-message">{{ err }}</div></div>
     <form id="write-panel" @submit.prevent="doSend">
       <textarea
+        :disabled="!roomConnected"
         rows="6"
         id="input-message"
         class="textarea has-fixed-size"
@@ -22,8 +24,19 @@
         autofocus="true"
         ref="inputMsg"
       ></textarea>
-      <button id="message-submit" class="button is-white">{{ $t("sendMessage") }}</button>
+      <button :disabled="!roomConnected" id="message-submit" class="button is-white">
+        {{ $t("sendMessage") }}
+      </button>
     </form>
+    <div class="modal modal-room-reject is-active" v-if="roomRejected">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        {{ $t("serverRejected") }}
+        <a @click="reloadPage">
+          {{ $t("reloadPage") }}
+        </a>
+      </div>
+    </div>
   </main>
 </template>
 
@@ -40,7 +53,9 @@ export default {
       messages: [],
       inputMessage: null,
       messagesBehind: null,
-      wsUrlString: null
+      roomConnected: false,
+      roomRejected: false,
+      err: null
     };
   },
   components: {
@@ -62,11 +77,7 @@ export default {
   },
   watch: {
     RoomId() {
-      messagesCable.channel.unsubscribe();
-      this.messagesBehind = 0;
-      this.messages = [];
-      this.startListening();
-      this.$refs.inputMsg.focus();
+      this.changeRoom();
     }
   },
   methods: {
@@ -92,17 +103,36 @@ export default {
         },
         {
           connected: () => {
-            messagesCable.channel.getInitialMessages();
+            if (this.messages.length == 0) {
+              messagesCable.channel.getInitialMessages();
+            } else {
+              messagesCable.channel.getAfterId(
+                this.messages[this.messages.length - 1].id
+              );
+            }
+            this.roomConnected = true;
+            this.err = null;
+          },
+          disconnected: () => {
+            this.roomConnected = false;
+            this.err = this.$t("disconnected");
+            this.scrollToBottom();
+          },
+          rejected: () => {
+            this.roomRejected = true;
           },
           received: data => {
             if (data.type == "receive" || data.type == "receive_latest") {
               this.messages = [...this.messages, ...data.messages];
-              this.$nextTick(() => {
-                let messagesDiv = this.$el.querySelector("#message-panel");
-                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-              });
+              this.scrollToBottom();
             } else if (data.type == "receive_from_id") {
               this.messages = [...data.messages, ...this.messages];
+            } else if (data.type == "error") {
+              this.err = data.message;
+              this.scrollToBottom();
+              setTimeout(() => {
+                this.err = null;
+              }, 1200);
             }
 
             if (data.type == "receive_latest" || data.type == "receive_from_id") {
@@ -122,9 +152,31 @@ export default {
               less_than_id: id,
               total_messages: this.storedMsgNum
             });
+          },
+          getAfterId: id => {
+            return messagesCable.channel.perform("receive_after_id", {
+              more_than_id: id,
+              total_messages: this.storedMsgNum
+            });
           }
         }
       );
+    },
+    scrollToBottom() {
+      this.$nextTick(() => {
+        let messagesDiv = this.$el.querySelector("#message-panel");
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      });
+    },
+    changeRoom() {
+      messagesCable.channel.unsubscribe();
+      this.messagesBehind = 0;
+      this.messages = [];
+      this.startListening();
+      this.$refs.inputMsg.focus();
+    },
+    reloadPage() {
+      this.$router.go();
     }
   }
 };
