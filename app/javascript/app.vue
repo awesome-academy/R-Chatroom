@@ -89,6 +89,7 @@ html {
       grid-area: room-list;
       border-bottom: 1px solid $border;
       padding: 1em;
+      overflow: auto;
 
       .room-selected {
         font-weight: bold;
@@ -103,6 +104,12 @@ html {
         text-transform: lowercase;
         font-size: x-small;
         color: $grey-dark;
+      }
+
+      .no-item {
+        font-size: small;
+        color: $grey;
+        margin-left: 0.6em;
       }
     }
 
@@ -121,7 +128,7 @@ html {
 
   #main {
     display: grid;
-    grid-template-rows: 1fr 120px;
+    grid-template-rows: 1fr auto 120px;
     grid-area: main;
 
     #message-panel {
@@ -136,7 +143,6 @@ html {
           "showname chat-time"
           "username chat-time"
           "chat-content chat-content";
-        grid-gap: 0.3em;
         justify-content: space-between;
         align-content: space-evenly;
 
@@ -160,7 +166,7 @@ html {
         }
 
         .chat-content {
-          margin-top: 0.4em;
+          margin-top: 0.5em;
           grid-area: chat-content;
         }
 
@@ -188,6 +194,17 @@ html {
       }
     }
 
+    #error {
+      display: grid;
+      border-bottom: 1px solid $border;
+
+      .error-message {
+        justify-self: center;
+        font-size: small;
+        color: red;
+      }
+    }
+
     #write-panel {
       display: grid;
       grid-template-columns: 1fr 80px;
@@ -207,6 +224,22 @@ html {
         align-self: center;
       }
     }
+
+    .disconnected {
+      color: $red;
+      font-size: small;
+      justify-self: center;
+      align-self: center;
+    }
+  }
+
+  .no-room {
+    font-size: small;
+    color: $grey;
+    justify-self: center;
+    align-self: center;
+    grid-row: 2 / span 1;
+    grid-column: 2 / span 2;
   }
 
   #info {
@@ -216,7 +249,7 @@ html {
     .info-item {
       .info-header {
         padding: 0.6em;
-        background-color: $grey-lighter;
+        background-color: $white-ter;
         color: $black-bis;
       }
 
@@ -279,5 +312,9 @@ html {
       width: 40%;
     }
   }
+}
+
+.modal-room-reject .modal-content {
+  text-align: center;
 }
 </style>

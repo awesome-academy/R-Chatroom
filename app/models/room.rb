@@ -18,7 +18,8 @@ class Room < ApplicationRecord
     length: {minimum: Settings.min_show_name_length,
       maximum: Settings.max_show_name_length}
   validates :description, presence: true,
-    length: {minimum: Settings.min_description_length}
+    length: {minimum: Settings.min_description_length},
+    allow_blank: true
 
   before_save :downcase_room_name
   after_create :set_admin

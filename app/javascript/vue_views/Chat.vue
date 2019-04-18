@@ -8,8 +8,8 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons">
-              <router-link to="/account" class="button is-light">{{ $t("account") }}</router-link>
-              <router-link to="/logout" class="button is-light">{{ $t("logout") }}</router-link>
+              <a class="button is-light">{{ userDetail.user_name }}</a>
+              <router-link to="/logout" class="button is-danger">{{ $t("logout") }}</router-link>
             </div>
           </div>
         </div>
@@ -29,7 +29,9 @@
             </a>
           </li>
         </ul>
+        <div class="no-item" v-if="rooms.length == 0">{{ $t("nothingHere") }}</div>
         <p class="menu-label">{{ $t("friends") }}</p>
+        <div class="no-item">{{ $t("nothingHere") }}</div>
       </div>
       <div id="room-join" class="is-white">
         <a class="button" @click="showRoomJoin = true">{{ $t("joinRoom") }}</a>
@@ -38,7 +40,8 @@
         <a class="button" @click="showRoomCreate = true">{{ $t("addRoom") }}</a>
       </div>
     </aside>
-    <RoomShow v-if="selectedRoom != null" :RoomId="selectedRoom"/>
+    <RoomShow v-if="selectedRoom" :RoomId="selectedRoom"/>
+    <div class="no-room" v-else>{{ $t("noRoom") }}</div>
     <aside id="info" v-if="selectedRoomObj">
       <div class="info-item">
         <div class="info-header">{{ $t("description") }}</div>
@@ -156,7 +159,7 @@ export default {
           }
         })
         .then(result => {
-          this.userDetail = result.data;
+          this.userDetail = result.data.data.user;
         })
         .catch(e => {
           this.$router.push("/login");
@@ -172,7 +175,11 @@ export default {
         })
         .then(result => {
           this.rooms = result.data.data.rooms;
-          this.selectedRoom = this.rooms[0].id;
+          if (this.rooms[0]) {
+            this.selectedRoom = this.rooms[0].id;
+          } else {
+            this.selectedRoom = null;
+          }
         })
         .catch(e => {
           console.log(e);
