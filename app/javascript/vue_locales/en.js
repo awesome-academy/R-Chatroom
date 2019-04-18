@@ -43,7 +43,12 @@ var en = {
   roomShowName: "Show Name",
   remove: "Remove",
   join: "Join",
-  leave: "Leave"
+  leave: "Leave",
+  somethingWrong: "Oops. Something is wrong.",
+  id: "User ID",
+  activationToken: "Activation Token",
+  activate: "Activate",
+  activatedSuccessfully: "Activated successfully!"
 };
 
 export default en;

@@ -55,7 +55,7 @@ import axios from "axios";
 import { mapState } from "vuex";
 
 export default {
-  name: "home",
+  name: "register",
   data() {
     return {
       inputUsername: null,
@@ -91,7 +91,7 @@ export default {
               username: this.inputUsername,
               authToken: null
             });
-            this.$router.push("/login");
+            this.$router.push(`/activate?id=${result.data.data.user.id}`);
           }, 1500);
         })
         .catch(e => {
