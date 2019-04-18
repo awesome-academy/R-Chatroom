@@ -19,7 +19,7 @@ class RoomsController < ApplicationController
       end
     else
       if params[:search_string].present?
-        @rooms = Room.find_by_name params[:search_string]
+        @rooms = Room.find_by_name(params[:search_string])
           .paginate page: params[:page], per_page: Settings.rooms_per_page
       else
         @rooms = Room.order_by_name.paginate page: params[:page],
@@ -68,6 +68,7 @@ class RoomsController < ApplicationController
   end
 
   def destroy
+    @room.disconnect_all_users
     @room.destroy
     if @room.destroyed?
       render :destroy, status: :accepted, location: @room

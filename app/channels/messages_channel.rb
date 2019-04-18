@@ -1,16 +1,7 @@
 class MessagesChannel < ApplicationCable::Channel
   def subscribed
-    @room = Room.find_by id: params["room_id"]
-    if @room
-      if @room.has_joined? current_user
-        stream_from "user_#{current_user.id}"
-        stream_from "chat_room_#{@room.id}"
-      else
-        reject_subscription
-      end
-    else
-      reject_subscription
-    end
+    stream_from "user_#{current_user.id}"
+    stream_from "chat_room_#{room.id}"
   end
 
   def unsubscribed
@@ -18,7 +9,7 @@ class MessagesChannel < ApplicationCable::Channel
   end
 
   def receive_latest data
-    messages = Message.find_by_room(@room.id).last data["total_messages"]
+    messages = Message.find_by_room(room.id).last data["total_messages"]
     formatted_messages = format_messages messages
     ActionCable.server.broadcast "user_#{current_user.id}", {
       type: "receive_latest",
@@ -28,7 +19,7 @@ class MessagesChannel < ApplicationCable::Channel
   end
 
   def receive_from_id data
-    messages = Message.find_by_room(@room.id)
+    messages = Message.find_by_room(room.id)
       .find_less_than_id(data["less_than_id"])
       .last data["total_messages"]
     formatted_messages = format_messages messages
@@ -40,7 +31,7 @@ class MessagesChannel < ApplicationCable::Channel
   end
 
   def receive_after_id data
-    messages = Message.find_by_room(@room.id)
+    messages = Message.find_by_room(room.id)
       .find_more_than_id(data["more_than_id"])
     formatted_messages = format_messages messages
     ActionCable.server.broadcast "user_#{current_user.id}", {
@@ -50,7 +41,8 @@ class MessagesChannel < ApplicationCable::Channel
   end
 
   def receive_from_range data
-    messages = Message.find_by_room(@room.id).find_by_range_id(data["less_than_id"], data["more_than_id"])
+    messages = Message.find_by_room(room.id)
+      .find_by_range_id(data["less_than_id"], data["more_than_id"])
     formatted_messages = format_messages messages
     ActionCable.server.broadcast "user_#{current_user.id}", {
       type: "receive_from_range",
@@ -59,9 +51,11 @@ class MessagesChannel < ApplicationCable::Channel
   end
 
   def receive data
-    message = Message.new user_id: current_user.id, room_id: params["room_id"], content: data["content"]
+    message = Message.new user_id: current_user.id,
+      room_id: room.id,
+      content: data["content"]
     if message.save
-      ActionCable.server.broadcast "chat_room_#{params[:room_id]}", {
+      ActionCable.server.broadcast "chat_room_#{room.id}", {
         type: "receive",
         messages: [format_message(message)]
       }

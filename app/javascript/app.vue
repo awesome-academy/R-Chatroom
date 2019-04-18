@@ -245,6 +245,7 @@ html {
   #info {
     grid-area: info;
     border-left: 1px solid $border;
+    overflow: auto;
 
     .info-item {
       .info-header {
