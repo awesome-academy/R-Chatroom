@@ -83,7 +83,6 @@ export default {
   methods: {
     doSend() {
       let sendData = {
-        room_id: this.$route.params.roomId,
         content: this.inputMessage
       };
       messagesCable.channel.sendMessage(sendData);
@@ -94,12 +93,11 @@ export default {
     },
     startListening() {
       messagesCable.cable = ActionCable.createConsumer(
-        `${this.storedWsUrl}/cable?id=${this.storedUserId}&token=${this.storedAuthToken}`
+        `${this.storedWsUrl}/cable?id=${this.storedUserId}&token=${this.storedAuthToken}&room_id=${this.RoomId}`
       );
       messagesCable.channel = messagesCable.cable.subscriptions.create(
         {
-          channel: "MessagesChannel",
-          room_id: this.RoomId
+          channel: "MessagesChannel"
         },
         {
           connected: () => {

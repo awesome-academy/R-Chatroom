@@ -23,6 +23,7 @@ class Room < ApplicationRecord
 
   before_save :downcase_room_name
   after_create :set_admin
+  before_destroy :disconnect_all_users
 
   scope :order_by_name, ->{order show_name: :asc}
   scope :find_by_name, ->(search_string){
@@ -39,7 +40,17 @@ class Room < ApplicationRecord
   end
 
   def kick user
+    sub = ActionCable.server.remote_connections.where current_user: user, room: self
+    sub.disconnect if sub
     users.delete user
+  end
+
+  def disconnect_all_users
+    users.each do |u|
+      p u
+      sub = ActionCable.server.remote_connections.where current_user: u, room: self
+      sub.disconnect if sub
+    end
   end
 
   private
