@@ -1,12 +1,11 @@
 class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  VALID_USER_NAME_REGEX = /\A[a-z0-9\-_.]+\z/
+  VALID_USER_NAME_REGEX = /\A[A-Za-z0-9\-_.]+\z/
 
   has_many :messages, dependent: :destroy
-  has_many :relationships, foreign_key: :relating_id, dependent: :destroy
-  has_many :relateds, through: :relationships
+  has_many :user_relationships, foreign_key: :relating_id, dependent: :destroy
+  has_many :relateds, through: :user_relationships
   has_many :tags, foreign_key: :tagged_id, dependent: :destroy
-  has_many :last_reads, dependent: :destroy
   has_many :room_members
   has_many :rooms, through: :room_members
 
@@ -25,6 +24,7 @@ class User < ApplicationRecord
 
   before_save :downcase_email
   before_save :downcase_user_name
+
   before_create :create_activation_digest
 
   scope :order_by_name, ->{order show_name: :asc}
