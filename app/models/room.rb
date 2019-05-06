@@ -1,5 +1,5 @@
 class Room < ApplicationRecord
-  VALID_ROOM_NAME_REGEX = /\A[a-z0-9\-_.]+\z/
+  VALID_ROOM_NAME_REGEX = /\A[A-Za-z0-9\-_.]+\z/
 
   has_many :messages, dependent: :delete_all
   has_many :room_members, dependent: :delete_all
