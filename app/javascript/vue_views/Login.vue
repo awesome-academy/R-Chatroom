@@ -57,8 +57,8 @@ export default {
     doLogin: function() {
       this.isLoading = true;
       axios
-        .post(`${this.storedApiUrl}/sessions`, {
-          session: {
+        .post(`${this.storedApiUrl}/sign_in`, {
+          user: {
             user_name: this.inputUsername,
             password: this.inputPassword
           }

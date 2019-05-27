@@ -81,12 +81,7 @@ export default {
               description: this.inputDescription
             }
           },
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
+          this.axiosOptionObject
         )
         .then(result => {
           this.isSuccess = true;

@@ -75,7 +75,7 @@ export default {
     doRegister: function() {
       this.isLoading = true;
       axios
-        .post(`${this.storedApiUrl}/users`, {
+        .post(`${this.storedApiUrl}/sign_up`, {
           user: {
             user_name: this.inputUsername,
             show_name: this.inputShowName,
