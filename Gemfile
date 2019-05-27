@@ -15,6 +15,8 @@ gem "rack-cors"
 gem "config"
 gem "webpacker", "~> 4.x"
 gem "will_paginate"
+gem "devise"
+gem "simple_token_authentication"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
