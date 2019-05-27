@@ -1,4 +1,5 @@
 class RoomsController < ApplicationController
+  acts_as_token_authentication_handler_for User
   before_action :find_authenticated_user
   before_action :set_room, except: [:index, :create]
   before_action :check_authenticated

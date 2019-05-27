@@ -2,6 +2,10 @@ class User < ApplicationRecord
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   VALID_USER_NAME_REGEX = /\A[A-Za-z0-9\-_.]+\z/
 
+  acts_as_token_authenticatable
+  devise :database_authenticatable, :registerable,
+    :recoverable, :rememberable, :validatable
+
   has_many :messages, dependent: :destroy
   has_many :user_relationships, foreign_key: :relating_id, dependent: :destroy
   has_many :relateds, through: :user_relationships
@@ -74,8 +78,6 @@ class User < ApplicationRecord
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
   end
-
-  has_secure_password
 
   private
   def downcase_email

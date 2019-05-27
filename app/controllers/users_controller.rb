@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  acts_as_token_authentication_handler_for User
   before_action :find_authenticated_user, only: [:show, :destroy]
   before_action :set_user, only: [:show, :destroy]
   before_action :set_room, only: [:destroy]
@@ -36,17 +37,6 @@ class UsersController < ApplicationController
   end
 
   def show
-  end
-
-  def create
-    @user = User.new user_params
-
-    if @user.save
-      @user.send_activation_email
-      render :show, status: :created, location: @user
-    else
-      render :create_error, status: :unprocessable_entity
-    end
   end
 
   private
