@@ -2,9 +2,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   devise_scope :user do
-    post "sign_up", :to => "registrations#create"
-    post "sign_in", :to => "sessions#create"
-    delete "sign_out", :to => "sessions#destroy"
+    post "sign_up", to: "registrations#create", format: "json"
+    post "sign_in", to: "sessions#create", format: "json"
+    delete "sign_out", to: "sessions#destroy", format: "json"
+    get "confirmation", to: "confirmations#show", format: "json"
   end
 
   post "rooms/join", format: "json"

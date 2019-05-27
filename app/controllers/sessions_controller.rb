@@ -5,7 +5,12 @@ class SessionsController < Devise::SessionsController
 
   def create
     if @user.valid_password? user_params[:password]
-      render :create_success, status: :created
+      if @user.confirmed_at.present?
+        render :create_success, status: :created
+      else
+        @error_message = I18n.t "not_activated"
+        render :create_error, status: :precondition_failed
+      end
     else
       @error_message = I18n.t "wrong_password"
       render :create_error, status: :unprocessable_entity
@@ -15,7 +20,6 @@ class SessionsController < Devise::SessionsController
   def destroy
     if current_user
       current_user.update_attribute :authentication_token, nil
-      sign_out current_user
       render :success, status: :ok
     else
       render :error, status: :unauthorized
