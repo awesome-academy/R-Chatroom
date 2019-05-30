@@ -51,9 +51,18 @@
       <div class="info-item" v-if="selectedRoomObj.is_admin == true">
         <div class="info-header">{{ $t("adminActions") }}</div>
         <p class="info-content">
-          <button @click="showUpdateRoom = true" class="button is-primary is-small">{{ $t("update") }}</button>
-          <button @click="showMembersRoom = true" class="button is-primary is-small">{{ $t("members") }}</button>
-          <button @click="showDeleteRoom = true" class="button is-danger is-small">{{ $t("delete") }}</button>
+          <button
+            @click="showUpdateRoom = true"
+            class="button is-primary is-small"
+          >{{ $t("update") }}</button>
+          <button
+            @click="showMembersRoom = true"
+            class="button is-primary is-small"
+          >{{ $t("members") }}</button>
+          <button
+            @click="showDeleteRoom = true"
+            class="button is-danger is-small"
+          >{{ $t("delete") }}</button>
         </p>
       </div>
     </aside>
@@ -142,7 +151,7 @@ export default {
       return this.rooms.find(room => room.id == this.selectedRoom);
     },
     roomDescription() {
-      if (this.selectedRoomObj.description){
+      if (this.selectedRoomObj.description) {
         return paragraphs(this.selectedRoomObj.description);
       } else {
         return null;
@@ -152,12 +161,10 @@ export default {
   methods: {
     async getUserDetail() {
       await axios
-        .get(`${this.storedApiUrl}/users/${this.storedUserId}`, {
-          auth: {
-            username: this.storedUsername,
-            password: this.storedAuthToken
-          }
-        })
+        .get(
+          `${this.storedApiUrl}/users/${this.storedUserId}`,
+          this.axiosOptionObject
+        )
         .then(result => {
           this.userDetail = result.data.data.user;
         })
@@ -167,12 +174,10 @@ export default {
     },
     async getRoomList() {
       await axios
-        .get(`${this.storedApiUrl}/users/${this.storedUserId}/rooms`, {
-          auth: {
-            username: this.storedUsername,
-            password: this.storedAuthToken
-          }
-        })
+        .get(
+          `${this.storedApiUrl}/users/${this.storedUserId}/rooms`,
+          this.axiosOptionObject
+        )
         .then(result => {
           this.rooms = result.data.data.rooms;
           if (this.rooms[0]) {

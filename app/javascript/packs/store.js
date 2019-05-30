@@ -18,8 +18,5 @@ export default new Vuex.Store({
       state.storedUsername = payload.username;
       state.storedAuthToken = payload.authToken;
     }
-  },
-  actions: {
-
   }
 });

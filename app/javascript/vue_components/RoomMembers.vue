@@ -80,12 +80,7 @@ export default {
       await axios
         .get(
           `${this.storedApiUrl}/rooms/${this.roomObj.id}/users?search_string=${this.searchString}&page=${page}`,
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
+          this.axiosOptionObject
         )
         .then(result => {
           this.members = result.data.data.users;
@@ -100,12 +95,7 @@ export default {
       await axios
         .delete(
           `${this.storedApiUrl}/rooms/${this.roomObj.id}/users/${memberId}`,
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
+          this.axiosOptionObject
         )
         .then(result => {
           this.getMemberList();

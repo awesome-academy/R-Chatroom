@@ -81,12 +81,7 @@ export default {
       await axios
         .get(
           `${this.storedApiUrl}/rooms?search_string=${this.searchString}&page=${page}`,
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
+          this.axiosOptionObject
         )
         .then(result => {
           this.rooms = result.data.data.rooms;
@@ -104,12 +99,7 @@ export default {
           {
             id: roomId
           },
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
+          this.axiosOptionObject
         )
         .then(result => {
           this.getAllRoomList();
@@ -126,12 +116,7 @@ export default {
           {
             id: roomId
           },
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
+          this.axiosOptionObject
         )
         .then(result => {
           this.getAllRoomList(this.page.currentPage);

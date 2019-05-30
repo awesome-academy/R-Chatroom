@@ -57,12 +57,7 @@ export default {
       axios
         .delete(
           `${this.storedApiUrl}/rooms/${this.roomObj.id}`,
-          {
-            auth: {
-              username: this.storedUsername,
-              password: this.storedAuthToken
-            }
-          }
+          this.axiosOptionObject
         )
         .then(result => {
           this.isSuccess = true;
