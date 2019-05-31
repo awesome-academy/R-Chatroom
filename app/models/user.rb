@@ -36,6 +36,10 @@ class User < ApplicationRecord
     rooms.delete room
   end
 
+  def valid_token? token
+    Devise.secure_compare token, authentication_token
+  end
+
   private
   def downcase_email
     email.downcase!

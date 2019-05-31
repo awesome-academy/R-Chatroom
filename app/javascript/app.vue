@@ -212,11 +212,7 @@ html {
       padding: 6px;
 
       #input-message {
-        textarea {
-          height: 100%;
-          max-height: 100%;
-          min-height: 100%;
-        }
+        overflow: auto;
       }
 
       #message-submit {
