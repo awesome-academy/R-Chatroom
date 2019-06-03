@@ -1,9 +1,6 @@
 class RoomsController < ApplicationController
-  acts_as_token_authentication_handler_for User
-  before_action :find_authenticated_user
-  before_action :set_room, except: [:index, :create]
-  before_action :check_authenticated
-  before_action :check_room_authorization, only: [:update, :destroy]
+  acts_as_token_authentication_handler_for User, fallback: :none
+  load_and_authorize_resource
 
   def index
     if params[:user_id]
@@ -18,7 +15,7 @@ class RoomsController < ApplicationController
   end
 
   def join
-    if @current_user.join_room @room
+    if current_user.join_room @room
       render :join, status: :created, location: @room
     else
       @error_message = I18n.t "rooms.join_error.already_joined"
@@ -27,7 +24,7 @@ class RoomsController < ApplicationController
   end
 
   def leave
-    if @current_user.leave_room @room
+    if current_user.leave_room @room
       render :leave, status: :created, location: @room
     else
       @error_message = I18n.t "rooms.leave_error.not_joined"
@@ -40,7 +37,7 @@ class RoomsController < ApplicationController
 
   def create
     @room = Room.new room_params
-    @room.user_created_id = @current_user.id
+    @room.user_created_id = current_user.id
     if @room.save
       render :show, status: :created, location: @room
     else
@@ -67,11 +64,6 @@ class RoomsController < ApplicationController
   end
 
   private
-  def set_room
-    @room = Room.find_by id: params[:id]
-    render :show_error, status: :unprocessable_entity unless @room
-  end
-
   def room_params
     params.require(:room).permit :room_name, :show_name, :description
   end

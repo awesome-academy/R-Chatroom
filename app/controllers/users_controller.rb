@@ -1,9 +1,8 @@
 class UsersController < ApplicationController
-  acts_as_token_authentication_handler_for User
-  before_action :find_authenticated_user, only: [:show, :destroy]
-  before_action :set_user, only: [:show, :destroy]
-  before_action :set_room, only: [:destroy]
-  before_action :check_room_authorization, only: [:destroy]
+  acts_as_token_authentication_handler_for User, fallback: :none
+  load_and_authorize_resource only: [:index, :show]
+  load_and_authorize_resource :room, only: [:kick]
+  load_and_authorize_resource :user, through: :room, only: [:kick]
 
   def index
     if params[:room_id]
@@ -17,7 +16,7 @@ class UsersController < ApplicationController
     @pagy, @users = pagy q.result(distinct: true), items: Settings.rooms_per_page
   end
 
-  def destroy
+  def kick
     if @room.kick @user
       render :success, status: :accepted
     else
@@ -29,16 +28,6 @@ class UsersController < ApplicationController
   end
 
   private
-  def set_user
-    @user = User.find_by id: params[:id]
-    render :show_error, status: :unprocessable_entity unless @user
-  end
-
-  def set_room
-    @room = Room.find_by id: params[:room_id]
-    render :show_error, status: :unprocessable_entity unless @room
-  end
-
   def user_params
     params.require(:user).permit :user_name, :show_name, :password,
       :password_confirmation, :email

@@ -101,10 +101,8 @@ export default {
     async joinRoom(roomId) {
       await axios
         .post(
-          `${this.storedApiUrl}/rooms/join`,
-          {
-            id: roomId
-          },
+          `${this.storedApiUrl}/rooms/${roomId}/join`,
+          {},
           {
             headers: this.loginHeader
           }
@@ -120,10 +118,8 @@ export default {
     async leaveRoom(roomId) {
       await axios
         .post(
-          `${this.storedApiUrl}/rooms/leave`,
-          {
-            id: roomId
-          },
+          `${this.storedApiUrl}/rooms/${roomId}/leave`,
+          {},
           {
             headers: this.loginHeader
           }
