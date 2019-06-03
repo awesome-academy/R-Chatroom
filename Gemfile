@@ -7,16 +7,14 @@ gem "rails", "~> 5.2.2", ">= 5.2.2.1"
 gem "mysql2", ">= 0.4.4", "< 0.6.0"
 gem "puma", "~> 3.11"
 gem "jbuilder", "~> 2.5"
-# gem "redis", "~> 4.0"
 gem "bcrypt", "~> 3.1.7"
-# gem "mini_magick", "~> 4.8"
 gem "bootsnap", ">= 1.1.0", require: false
 gem "rack-cors"
 gem "config"
 gem "webpacker", "~> 4.x"
-gem "will_paginate"
-gem "devise"
+gem "pagy"
 gem "simple_token_authentication"
+gem "ransack"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
@@ -31,5 +29,3 @@ group :development do
   gem "spring"
   gem "spring-watcher-listen", "~> 2.0.0"
 end
-
-gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]

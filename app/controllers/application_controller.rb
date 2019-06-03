@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include Pagy::Backend
+
   private
   def find_authenticated_user
     @current_user ||= current_user

@@ -80,8 +80,14 @@ export default {
       let page = this.page.currentPage;
       await axios
         .get(
-          `${this.storedApiUrl}/rooms?search_string=${this.searchString}&page=${page}`,
-          this.axiosOptionObject
+          `${this.storedApiUrl}/rooms`,
+          {
+            params: {
+              "page": this.page.currentPage,
+              "q[room_name_or_show_name_or_description_cont]": this.searchString
+            },
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.rooms = result.data.data.rooms;
@@ -99,7 +105,9 @@ export default {
           {
             id: roomId
           },
-          this.axiosOptionObject
+          {
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.getAllRoomList();
@@ -116,7 +124,9 @@ export default {
           {
             id: roomId
           },
-          this.axiosOptionObject
+          {
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.getAllRoomList(this.page.currentPage);

@@ -57,7 +57,9 @@ export default {
       axios
         .delete(
           `${this.storedApiUrl}/rooms/${this.roomObj.id}`,
-          this.axiosOptionObject
+          {
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.isSuccess = true;

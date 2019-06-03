@@ -163,7 +163,9 @@ export default {
       await axios
         .get(
           `${this.storedApiUrl}/users/${this.storedUserId}`,
-          this.axiosOptionObject
+          {
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.userDetail = result.data.data.user;
@@ -176,7 +178,9 @@ export default {
       await axios
         .get(
           `${this.storedApiUrl}/users/${this.storedUserId}/rooms`,
-          this.axiosOptionObject
+          {
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.rooms = result.data.data.rooms;
