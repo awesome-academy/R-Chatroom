@@ -23,8 +23,9 @@
         v-model="inputMessage"
         autofocus="true"
         ref="inputMsg"
+        @keypress="chatInputKeyPressed"
       ></textarea>
-      <button :disabled="!roomConnected" id="message-submit" class="button is-white">
+      <button :disabled="!roomConnected" id="message-submit" class="button is-info">
         {{ $t("sendMessage") }}
       </button>
     </form>
@@ -87,6 +88,14 @@ export default {
       };
       messagesCable.channel.sendMessage(sendData);
       this.inputMessage = null;
+    },
+    chatInputKeyPressed(e) {
+      if (e.keyCode == 13) {
+        if (!e.shiftKey) {
+          e.preventDefault();
+          this.doSend();
+        }
+      }
     },
     loadMoreMessages() {
       messagesCable.channel.getFromId(this.messages[0].id);

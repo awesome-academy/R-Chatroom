@@ -3,40 +3,35 @@ User.create! user_name: "tranxuanthang",
   email: "tranthang.yb@outlook.com",
   password: "123456",
   password_confirmation: "123456",
-  activated: true,
-  activated_at: Time.zone.now
+  confirmed_at: Time.zone.now
 
 User.create! user_name: "cauvang",
   show_name: "Cậu Vàng",
   email: "cauvang@gmail.com",
   password: "123456",
   password_confirmation: "123456",
-  activated: true,
-  activated_at: Time.zone.now
+  confirmed_at: Time.zone.now
 
 User.create! user_name: "laohac",
   show_name: "Lão Hạc",
   email: "laohac@gmail.com",
   password: "123456",
   password_confirmation: "123456",
-  activated: true,
-  activated_at: Time.zone.now
+  confirmed_at: Time.zone.now
 
 User.create! user_name: "cuudolly",
   show_name: "Cừu Dolly",
   email: "cuudolly@gmail.com",
   password: "123456",
   password_confirmation: "123456",
-  activated: true,
-  activated_at: Time.zone.now
+  confirmed_at: Time.zone.now
 
 User.create! user_name: "bachtuyet",
   show_name: "Bạch Tuyết",
   email: "bachtuyet@gmail.com",
   password: "123456",
   password_confirmation: "123456",
-  activated: true,
-  activated_at: Time.zone.now
+  confirmed_at: Time.zone.now
 
 25.times do
   User.create! user_name: Faker::Internet.unique.user_name,
@@ -44,8 +39,7 @@ User.create! user_name: "bachtuyet",
     email: Faker::Internet.free_email,
     password: "123456",
     password_confirmation: "123456",
-    activated: true,
-    activated_at: Time.zone.now
+    confirmed_at: Time.zone.now
 end
 
 users = User.all.take 15

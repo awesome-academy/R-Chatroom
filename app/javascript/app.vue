@@ -63,12 +63,13 @@ html {
 .home-container {
   display: grid;
   grid-template-columns: 1fr 4fr 1fr;
-  grid-template-rows: 60px 1fr;
+  grid-template-rows: 3.25rem 1fr;
   grid-template-areas:
     "navbar navbar navbar"
     "rooms main info"
     "rooms main info";
   height: 100vh;
+  background-color: $light;
 
   #navbar {
     grid-area: navbar;
@@ -77,18 +78,18 @@ html {
 
   #rooms {
     grid-area: rooms;
-    border-right: 1px solid $border;
+    margin: 0.8rem 0.4rem 0.8rem 0.8rem;
     display: grid;
     grid-template-areas:
       "room-list room-list"
       "room-join room-add";
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 60px;
+    background-color: $white;
 
     #room-list {
       grid-area: room-list;
       border-bottom: 1px solid $border;
-      padding: 1em;
       overflow: auto;
 
       .room-selected {
@@ -103,13 +104,6 @@ html {
       .room-name {
         text-transform: lowercase;
         font-size: x-small;
-        color: $grey-dark;
-      }
-
-      .no-item {
-        font-size: small;
-        color: $grey;
-        margin-left: 0.6em;
       }
     }
 
@@ -130,10 +124,12 @@ html {
     display: grid;
     grid-template-rows: 1fr auto 120px;
     grid-area: main;
+    margin: 0.8rem 0.4rem 0.8rem 0.4rem;
 
     #message-panel {
       overflow: auto;
-      border-bottom: 1px solid $border;
+      margin-bottom: 0.8rem;
+      background-color: $white;
 
       .chat-message {
         display: grid;
@@ -196,7 +192,8 @@ html {
 
     #error {
       display: grid;
-      border-bottom: 1px solid $border;
+      border-bottom: 0.8rem;
+      background-color: $white;
 
       .error-message {
         justify-self: center;
@@ -210,9 +207,11 @@ html {
       grid-template-columns: 1fr 80px;
       grid-gap: 6px;
       padding: 6px;
+      background-color: $white;
 
       #input-message {
         overflow: auto;
+        box-shadow: unset;
       }
 
       #message-submit {
@@ -240,32 +239,63 @@ html {
 
   #info {
     grid-area: info;
-    border-left: 1px solid $border;
+    margin: 0.8rem 0.8rem 0.8rem 0.4rem;
     overflow: auto;
-
-    .info-item {
-      .info-header {
-        padding: 0.6em;
-        background-color: $white-ter;
-        color: $black-bis;
-      }
-
-      .info-content {
-        padding: 0.6em;
-      }
-
-      .info-content-empty {
-        padding: 0.6em;
-        font-size: small;
-        color: $grey-light;
-      }
-    }
+    background-color: $white;
   }
 
   .navbar-brand {
     text-transform: uppercase;
     font-weight: bold;
     font-size: 1.2rem;
+  }
+}
+
+.info-item {
+  .info-header {
+    padding: 0.6em;
+    background-color: $grey-dark;
+    color: $white-bis;
+  }
+
+  .info-content {
+    padding: 0.6em;
+  }
+
+  .info-list {
+    .info-item {
+      margin: 0.2rem 0;
+
+      a {
+        display: block;
+        padding: 0.3em;
+      }
+      &:hover {
+         background-color: $grey-lighter;
+      }
+    }
+
+    .info-item-active {
+      background-color: $cyan;
+
+      a {
+        color: white;
+      }
+
+      a:hover {
+        color: white;
+      }
+
+      &:hover {
+        background-color: $blue;
+      }
+    }
+  }
+
+  .info-content-empty {
+    padding: 0.6em;
+    font-size: small;
+    color: $grey-light;
   }
 }
 
@@ -291,23 +321,21 @@ html {
 }
 
 .modal-member-list {
-  .member-list-item {
-    td {
-      vertical-align: middle;
-    }
+  td {
+    vertical-align: middle;
+  }
 
-    .show-name {
-      width: 30%;
-    }
+  .show-name {
+    width: 30%;
+  }
 
-    .user-name {
-      width: 30%;
-    }
+  .user-name {
+    width: 30%;
+  }
 
-    .user-action {
-      text-align: right;
-      width: 40%;
-    }
+  .user-action {
+    text-align: right;
+    width: 40%;
   }
 }
 
