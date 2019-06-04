@@ -8,24 +8,13 @@ class UsersController < ApplicationController
   def index
     if params[:room_id]
       @room = Room.find_by id: params[:room_id]
-      if @room
-        if params[:search_string].present?
-          @users = @room.users.find_by_name(params[:search_string])
-            .paginate page: params[:page], per_page: Settings.rooms_per_page
-        else
-          @users = @room.users.order_by_name.paginate page: params[:page]
-        end
-      else
-        render :error, status: :unprocessable_entity
-      end
+      render status: :unprocessable_entity unless @room
+      q = @room.users.ransack params[:q]
     else
-      if params[:search_string].present?
-        @users = User.find_by_name params[:search_string]
-          .paginate page: params[:page], per_page: Settings.rooms_per_page
-      else
-        @users = User.order_by_name.paginate page: params[:page]
-      end
+      q = User.ransack params[:q]
     end
+    render status: :unprocessable_entity unless q
+    @pagy, @users = pagy q.result(distinct: true), items: Settings.rooms_per_page
   end
 
   def destroy

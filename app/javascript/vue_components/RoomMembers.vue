@@ -76,11 +76,16 @@ export default {
   props: ["roomObj"],
   methods: {
     async getMemberList() {
-      let page = this.page.currentPage;
       await axios
         .get(
-          `${this.storedApiUrl}/rooms/${this.roomObj.id}/users?search_string=${this.searchString}&page=${page}`,
-          this.axiosOptionObject
+          `${this.storedApiUrl}/rooms/${this.roomObj.id}/users`,
+          {
+            params: {
+              "page": this.page.currentPage,
+              "q[user_name_or_show_name_cont]": this.searchString
+            },
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.members = result.data.data.users;

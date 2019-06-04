@@ -8,25 +8,13 @@ class RoomsController < ApplicationController
   def index
     if params[:user_id]
       user = User.find_by id: params[:user_id]
-      if user
-        if params[:search_string].present?
-          @rooms = user.rooms.find_by_name(params[:search_string])
-            .paginate page: params[:page], per_page: Settings.rooms_per_page
-        else
-          @rooms = user.rooms.order_by_name.paginate page: params[:page]
-        end
-      else
-        render status: :unprocessable_entity
-      end
+      render status: :unprocessable_entity unless user
+      q = user.rooms.includes(:users, :admins).ransack params[:q]
     else
-      if params[:search_string].present?
-        @rooms = Room.find_by_name(params[:search_string])
-          .paginate page: params[:page], per_page: Settings.rooms_per_page
-      else
-        @rooms = Room.order_by_name.paginate page: params[:page],
-          per_page: Settings.rooms_per_page
-      end
+      q = Room.includes(:users, :admins).ransack params[:q]
     end
+    render status: :unprocessable_entity unless q
+    @pagy, @rooms = pagy q.result(distinct: true), items: Settings.rooms_per_page
   end
 
   def join

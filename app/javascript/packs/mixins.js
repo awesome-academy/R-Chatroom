@@ -6,12 +6,10 @@ var globalMixin = {
       "storedAuthToken",
       "storedUsername"
     ]),
-    axiosOptionObject() {
+    loginHeader() {
       return {
-        headers: {
-          "X-User-Name": this.storedUsername,
-          "X-User-Token": this.storedAuthToken
-        }
+        "X-User-Name": this.storedUsername,
+        "X-User-Token": this.storedAuthToken
       }
     }
   }

@@ -129,6 +129,7 @@ GEM
     nokogiri (1.10.2)
       mini_portile2 (~> 2.4.0)
     orm_adapter (0.5.0)
+    pagy (3.2.1)
     puma (3.12.1)
     rack (2.0.6)
     rack-cors (1.0.3)
@@ -161,6 +162,11 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rake (12.3.2)
+    ransack (2.1.1)
+      actionpack (>= 5.0)
+      activerecord (>= 5.0)
+      activesupport (>= 5.0)
+      i18n
     rb-fsevent (0.10.3)
     rb-inotify (0.10.0)
       ffi (~> 1.0)
@@ -226,21 +232,21 @@ DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
   config
-  devise
   factory_bot_rails
   faker
   jbuilder (~> 2.5)
   listen (>= 3.0.5, < 3.2)
   mysql2 (>= 0.4.4, < 0.6.0)
+  pagy
   puma (~> 3.11)
   rack-cors
   rails (~> 5.2.2, >= 5.2.2.1)
+  ransack
   rspec-rails
   shoulda-matchers
   simple_token_authentication
   spring
   spring-watcher-listen (~> 2.0.0)
-  tzinfo-data
   webpacker (~> 4.x)
   will_paginate
 
