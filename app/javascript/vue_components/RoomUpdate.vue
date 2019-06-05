@@ -81,7 +81,9 @@ export default {
               description: this.inputDescription
             }
           },
-          this.axiosOptionObject
+          {
+            headers: this.loginHeader
+          }
         )
         .then(result => {
           this.isSuccess = true;

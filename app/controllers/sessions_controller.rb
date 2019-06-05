@@ -1,5 +1,5 @@
 class SessionsController < Devise::SessionsController
-  acts_as_token_authentication_handler_for User, only: [:destroy]
+  acts_as_token_authentication_handler_for User, only: [:destroy], fallback: :none
   before_action :set_user, only: [:create]
   skip_before_action :verify_signed_out_user
 
@@ -18,6 +18,8 @@ class SessionsController < Devise::SessionsController
   end
 
   def destroy
+    return render :error, status: :unauthorized if cannot? :manage, current_user
+
     if current_user
       current_user.update_attribute :authentication_token, nil
       render :success, status: :ok

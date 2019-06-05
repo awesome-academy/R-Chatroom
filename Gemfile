@@ -15,6 +15,7 @@ gem "webpacker", "~> 4.x"
 gem "pagy"
 gem "simple_token_authentication"
 gem "ransack"
+gem "cancancan"
 
 group :development, :test do
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]

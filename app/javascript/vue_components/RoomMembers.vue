@@ -99,7 +99,7 @@ export default {
     async removeMember(memberId) {
       await axios
         .delete(
-          `${this.storedApiUrl}/rooms/${this.roomObj.id}/users/${memberId}`,
+          `${this.storedApiUrl}/rooms/${this.roomObj.id}/users/${memberId}/kick`,
           this.axiosOptionObject
         )
         .then(result => {
