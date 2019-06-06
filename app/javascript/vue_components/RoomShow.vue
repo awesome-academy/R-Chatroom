@@ -13,10 +13,12 @@
       </div>
       <RoomMessage v-for="message in messages" :key="`${RoomId}-${message.id}`" :message="message"/>
     </div>
-    <div id="error"><div class="error-message">{{ err }}</div></div>
+    <div id="error">
+      <div class="error-message">{{ err }}</div>
+    </div>
     <form id="write-panel" @submit.prevent="doSend">
       <textarea
-        :disabled="!roomConnected"
+        :disabled="!roomConnected || sending"
         rows="6"
         id="input-message"
         class="textarea has-fixed-size"
@@ -25,9 +27,24 @@
         ref="inputMsg"
         @keypress="chatInputKeyPressed"
       ></textarea>
-      <button :disabled="!roomConnected" id="message-submit" class="button is-info">
-        {{ $t("sendMessage") }}
-      </button>
+      <div id="message-submit">
+        <button :disabled="!roomConnected || sending"
+          class="button is-info">
+          {{ $t("sendMessage") }}
+        </button>
+      </div>
+      <div class="file has-name is-small is-info">
+        <label class="file-label">
+          <input class="file-input" type="file" name="resume" @change="fileChanged">
+          <span class="file-cta">
+            <span class="file-label">
+              {{ $t("chooseAFile") }}
+            </span>
+          </span>
+          <span class="file-name" v-if="inputAttachment">{{ inputAttachment.name }}</span>
+          <span class="file-name" v-else>{{ $t("noFileSelected") }}</span>
+        </label>
+      </div>
     </form>
     <div class="modal modal-room-reject is-active" v-if="roomRejected">
       <div class="modal-background"></div>
@@ -45,6 +62,7 @@
 import { mapState } from "vuex";
 import ActionCable from "actioncable";
 import RoomMessage from "./RoomMessage.vue";
+import axios from "axios";
 
 var messagesCable = {};
 
@@ -53,10 +71,12 @@ export default {
     return {
       messages: [],
       inputMessage: null,
+      inputAttachment: null,
       messagesBehind: null,
       roomConnected: false,
       roomRejected: false,
-      err: null
+      err: null,
+      sending: false
     };
   },
   components: {
@@ -83,11 +103,32 @@ export default {
   },
   methods: {
     doSend() {
-      let sendData = {
-        content: this.inputMessage
-      };
-      messagesCable.channel.sendMessage(sendData);
-      this.inputMessage = null;
+      this.sending = true;
+      let formData = new FormData();
+      if (this.inputMessage != null) {
+        formData.append("message[content]", this.inputMessage)
+      }
+      if (this.inputAttachment != null) {
+        formData.append("message[attachment]", this.inputAttachment)
+      }
+      axios
+        .post(
+          `${this.storedApiUrl}/rooms/${this.RoomId}/messages`,
+          formData,
+          {
+            headers: this.loginHeader
+          }
+        )
+        .then(() => {
+          this.sending = false;
+          this.inputMessage = null;
+          this.inputAttachment = null;
+        })
+        .catch(e => {
+          this.sending = false;
+          this.inputAttachment = null;
+          console.log(e);
+        });
     },
     chatInputKeyPressed(e) {
       if (e.keyCode == 13) {
@@ -96,6 +137,9 @@ export default {
           this.doSend();
         }
       }
+    },
+    fileChanged(e) {
+      this.inputAttachment = e.target.files[0];
     },
     loadMoreMessages() {
       messagesCable.channel.getFromId(this.messages[0].id);

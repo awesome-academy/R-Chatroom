@@ -47,7 +47,6 @@ class Room < ApplicationRecord
 
   def disconnect_all_users
     users.each do |u|
-      p u
       sub = ActionCable.server.remote_connections.where current_user: u, room: self
       sub.disconnect if sub
     end
