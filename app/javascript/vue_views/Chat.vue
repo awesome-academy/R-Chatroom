@@ -1,37 +1,38 @@
 <template>
   <div class="home-container">
-    <nav id="navbar" class="navbar is-light">
+    <nav id="navbar" class="navbar is-dark">
       <div class="navbar-brand">
         <a class="navbar-item">R-chatroom</a>
       </div>
       <div class="navbar-menu">
         <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <a class="button is-light">{{ userDetail.user_name }}</a>
-              <router-link to="/logout" class="button is-danger">{{ $t("logout") }}</router-link>
-            </div>
-          </div>
+          <a class="navbar-item">{{ userDetail.user_name }}</a>
+          <router-link class="navbar-item" to="/logout">{{ $t("logout") }}</router-link>
         </div>
       </div>
     </nav>
     <aside id="rooms">
-      <div class="menu" id="room-list">
-        <p class="menu-label">{{ $t("groups") }}</p>
-        <ul class="menu-list">
-          <li v-for="room in rooms" :key="room.id">
-            <a
-              @click="selectedRoom = room.id"
-              v-bind:class="{'room-selected': selectedRoom == room.id}"
+      <div id="room-list">
+        <div class="info-item">
+          <div class="info-header">{{ $t("groups") }}</div>
+          <div class="info-list">
+            <div class="info-item" v-for="room in rooms" :key="room.id"
+              v-bind:class="{'info-item-active': selectedRoom == room.id}"
             >
-              <div class="show-name">{{ room.show_name }}</div>
-              <div class="room-name">{{ room.room_name }}</div>
-            </a>
-          </li>
-        </ul>
-        <div class="no-item" v-if="rooms.length == 0">{{ $t("nothingHere") }}</div>
-        <p class="menu-label">{{ $t("friends") }}</p>
-        <div class="no-item">{{ $t("nothingHere") }}</div>
+              <a @click="selectedRoom = room.id">
+                <div class="show-name">{{ room.show_name }}</div>
+                <div class="room-name">{{ room.room_name }}</div>
+              </a>
+            </div>
+          </div>
+          <div class="info-content-empty" v-if="rooms.length == 0">
+            {{ $t("nothingHere") }}
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-header">{{ $t("friends") }}</div>
+          <div class="info-content-empty">{{ $t("nothingHere") }}</div>
+        </div>
       </div>
       <div id="room-join" class="is-white">
         <a class="button" @click="showRoomJoin = true">{{ $t("joinRoom") }}</a>

@@ -19,6 +19,13 @@
         </form>
         <div v-if="members.length > 0">
           <table class="member-list table is-fullwidth">
+            <thead>
+              <tr class="room-list-item">
+                <th class="show-name">{{ $t("username") }}</th>
+                <th class="user-name">{{ $t("userShowName") }}</th>
+                <th class="user-action">{{ $t("action") }}</th>
+              </tr>
+            </thead>
             <tr class="member-list-item" v-for="member in members" :key="member.id">
               <td class="show-name">{{ member.show_name }}</td>
               <td class="user-name">{{ member.user_name }}</td>

@@ -7,7 +7,7 @@
         <button class="delete" aria-label="close" @click="$emit('close')"></button>
       </header>
       <section class="modal-card-body modal-room-join">
-        <form @submit.prevent="getAllRoomList">
+        <form @submit.prevent="searchSubmit">
           <div class="field has-addons has-addons-centered">
             <div class="control">
               <input class="input" type="text" v-model="searchString">
@@ -19,6 +19,13 @@
         </form>
         <div v-if="rooms.length > 0">
           <table class="room-list table is-fullwidth">
+            <thead>
+              <tr class="room-list-item">
+                <th class="show-name">{{ $t("roomName") }}</th>
+                <th class="room-name">{{ $t("roomShowName") }}</th>
+                <th class="room-action">{{ $t("action") }}</th>
+              </tr>
+            </thead>
             <tr class="room-list-item" v-for="room in rooms" :key="room.id">
               <td class="show-name">{{ room.show_name }}</td>
               <td class="room-name">{{ room.room_name }}</td>
@@ -97,6 +104,10 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    searchSubmit() {
+      this.page.currentPage = 1;
+      this.getAllRoomList();
     },
     async joinRoom(roomId) {
       await axios

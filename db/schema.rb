@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_27_081725) do
+ActiveRecord::Schema.define(version: 2019_06_04_082921) do
 
   create_table "last_reads", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "reader_id"
@@ -84,14 +84,9 @@ ActiveRecord::Schema.define(version: 2019_05_27_081725) do
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "user_name"
     t.string "show_name"
-    t.string "password_digest"
-    t.string "token_digest"
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "activation_digest"
-    t.boolean "activated", default: false
-    t.datetime "activated_at"
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -104,7 +99,6 @@ ActiveRecord::Schema.define(version: 2019_05_27_081725) do
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["token_digest"], name: "index_users_on_token_digest", unique: true
   end
 
   add_foreign_key "last_reads", "messages"

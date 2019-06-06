@@ -41,6 +41,8 @@ var en = {
   addRoom: "Add Room",
   roomName: "Room Name",
   roomShowName: "Show Name",
+  userShowName: "Show Name",
+  action: "Action",
   remove: "Remove",
   join: "Join",
   leave: "Leave",
