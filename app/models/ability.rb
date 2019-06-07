@@ -16,6 +16,10 @@ class Ability
 
       can [:read, :create, :join, :leave], Room
 
+      can :read, Room do |room|
+        can :create, Message
+      end
+
       can :read, Message do |message|
         message.room.has_joined? user
       end

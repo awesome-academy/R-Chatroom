@@ -55,7 +55,12 @@ var en = {
   disconnected: "Disconnected",
   noRoom: "¯\\_(ツ)_/¯",
   serverRejected: "Server has rejected this connection.",
-  reloadPage: "Reload page"
+  reloadPage: "Reload page",
+  attachment: "Attachment",
+  size: "Size",
+  bytes: "byte(s)",
+  chooseAFile: "Choose a file",
+  noFileSelected: "No file selected"
 };
 
 export default en;

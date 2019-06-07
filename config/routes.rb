@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :destroy], format: "json" do
       delete "kick", on: :member, format: "json"
     end
+    resources :messages, only: [:create], format: "json"
   end
 
   resource :user, only: [:show], format: "json"

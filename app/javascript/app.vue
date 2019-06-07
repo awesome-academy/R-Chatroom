@@ -142,6 +142,17 @@ html {
         justify-content: space-between;
         align-content: space-evenly;
 
+        .attachment {
+          background-color: $white-bis;
+          padding: 0.5em;
+          font-size: small;
+          color: $grey-dark;
+
+          &:not(:last-child) {
+            margin-bottom: 0.3em;
+          }
+        }
+
         .showname {
           grid-area: showname;
         }
@@ -164,6 +175,10 @@ html {
         .chat-content {
           margin-top: 0.5em;
           grid-area: chat-content;
+
+          &:not(:last-child) {
+            margin-bottom: 0.5rem;
+          }
         }
 
         .load-more {
@@ -205,16 +220,26 @@ html {
     #write-panel {
       display: grid;
       grid-template-columns: 1fr 80px;
+      grid-template-rows: auto auto;
+      grid-template-areas:
+        "input-message message-submit"
+        "input-attachment .";
       grid-gap: 6px;
       padding: 6px;
       background-color: $white;
 
       #input-message {
+        grid-area: input-message;
         overflow: auto;
         box-shadow: unset;
       }
 
+      #input-attachment {
+        grid-area: input-attachment;
+      }
+
       #message-submit {
+        grid-area: message-submit;
         justify-self: center;
         align-self: center;
       }
