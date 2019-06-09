@@ -90,7 +90,14 @@ html {
     #room-list {
       grid-area: room-list;
       border-bottom: 1px solid $border;
-      overflow: auto;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100%;
+      min-height: 0;
+
+      .info-list {
+        overflow: auto;
+      }
 
       .room-selected {
         font-weight: bold;

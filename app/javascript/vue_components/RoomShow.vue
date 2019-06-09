@@ -11,7 +11,8 @@
       <div class="chat-message" v-if="messages.length == 0">
         <div class="no-message">{{ $t("noMessage") }}</div>
       </div>
-      <RoomMessage v-for="message in messages" :key="`${RoomId}-${message.id}`" :message="message"/>
+      <RoomMessage v-for="message in messages" :key="`${RoomId}-${message.id}`"
+        :message="message" @scrollToBottom="scrollToBottom" />
     </div>
     <div id="error">
       <div class="error-message">{{ err }}</div>

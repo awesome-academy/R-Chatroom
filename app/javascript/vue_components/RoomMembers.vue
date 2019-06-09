@@ -34,13 +34,12 @@
               </td>
             </tr>
           </table>
-          <Pagination
-            v-model="page.currentPage"
-            :records="page.totalEntries"
-            :per-page="page.perPage"
-            @paginate="getMemberList"
-            :options="{theme: 'bulma'}"
-          ></Pagination>
+          <Paginator
+            :currentPage="page.currentPage"
+            :perPage="page.perPage"
+            :totalEntries="page.totalEntries"
+            @pageChanged="getMemberList"
+          ></Paginator>
         </div>
         <div class v-else>{{ $t("nothingFound") }}</div>
       </section>
@@ -54,7 +53,7 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
-import Pagination from "vue-pagination-2";
+import Paginator from "./Paginator";
 
 export default {
   data() {
@@ -69,7 +68,7 @@ export default {
     };
   },
   components: {
-    Pagination
+    Paginator
   },
   computed: {
     ...mapState([
@@ -82,19 +81,26 @@ export default {
   },
   props: ["roomObj"],
   methods: {
-    async getMemberList() {
+    async getMemberList(navigatePage = null) {
+      let page;
+      if (navigatePage) {
+        page = navigatePage;
+      } else {
+        page = this.page.currentPage;
+      }
       await axios
         .get(
           `${this.storedApiUrl}/rooms/${this.roomObj.id}/users`,
           {
             params: {
-              "page": this.page.currentPage,
+              "page": page,
               "q[user_name_or_show_name_cont]": this.searchString
             },
             headers: this.loginHeader
           }
         )
         .then(result => {
+          this.page.currentPage = page;
           this.members = result.data.data.users;
           this.page.perPage = result.data.data.page.per_page;
           this.page.totalEntries = result.data.data.page.total_entries;
@@ -102,6 +108,10 @@ export default {
         .catch(e => {
           console.log(e);
         });
+    },
+    searchSubmit() {
+      this.page.currentPage = 1;
+      this.getMemberList();
     },
     async removeMember(memberId) {
       await axios

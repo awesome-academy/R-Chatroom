@@ -6,4 +6,4 @@ max_room_name_length: 255
 min_show_name_length: 6
 min_room_name_length: 6
 min_description_length: 15
-rooms_per_page: 5
+rooms_per_page: 15
