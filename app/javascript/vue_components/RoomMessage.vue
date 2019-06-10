@@ -15,7 +15,8 @@
         {{ $t("size") }}: {{ message.attachment_byte_size }} {{ $t("bytes") }}
       </div>
       <div class="attachment_preview" v-if="message.attachment_thumb">
-        <img :src="message.attachment_thumb" :alt="message.attachment_filename" />
+        <img :src="message.attachment_thumb" :alt="message.attachment_filename"
+          @load="$emit('scrollToBottom')"/>
       </div>
     </div>
   </div>

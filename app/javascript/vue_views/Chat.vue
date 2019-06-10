@@ -12,12 +12,11 @@
       </div>
     </nav>
     <aside id="rooms">
-      <div id="room-list">
-        <div class="info-item">
+      <div id="room-list" class="info-item">
           <div class="info-header">{{ $t("groups") }}</div>
-          <div class="info-list">
+          <div class="info-list" v-if="rooms.length > 0">
             <div class="info-item" v-for="room in rooms" :key="room.id"
-              v-bind:class="{'info-item-active': selectedRoom == room.id}"
+              :class="{'info-item-active': selectedRoom == room.id}"
             >
               <a @click="selectedRoom = room.id">
                 <div class="show-name">{{ room.show_name }}</div>
@@ -25,15 +24,16 @@
               </a>
             </div>
           </div>
+          <Paginator v-if="rooms.length > 0"
+            :currentPage="roomsPage.currentPage"
+            :perPage="roomsPage.perPage"
+            :totalEntries="roomsPage.totalEntries"
+            :smaller="true"
+            @pageChanged="getRoomList"></Paginator>
           <div class="info-content-empty" v-if="rooms.length == 0">
             {{ $t("nothingHere") }}
           </div>
         </div>
-        <div class="info-item">
-          <div class="info-header">{{ $t("friends") }}</div>
-          <div class="info-content-empty">{{ $t("nothingHere") }}</div>
-        </div>
-      </div>
       <div id="room-join" class="is-white">
         <a class="button" @click="showRoomJoin = true">{{ $t("joinRoom") }}</a>
       </div>
@@ -114,7 +114,7 @@ import RoomCreate from "../vue_components/RoomCreate.vue";
 import RoomUpdate from "../vue_components/RoomUpdate.vue";
 import RoomDelete from "../vue_components/RoomDelete.vue";
 import RoomMembers from "../vue_components/RoomMembers.vue";
-
+import Paginator from "../vue_components/Paginator";
 var ac = {};
 
 export default {
@@ -123,6 +123,11 @@ export default {
     return {
       userDetail: {},
       rooms: [],
+      roomsPage: {
+        currentPage: 1,
+        perPage: null,
+        totalEntries: null
+      },
       messages: [],
       inputMessage: null,
       selectedRoom: null,
@@ -139,7 +144,8 @@ export default {
     RoomCreate,
     RoomUpdate,
     RoomDelete,
-    RoomMembers
+    RoomMembers,
+    Paginator
   },
   computed: {
     ...mapState([
@@ -175,15 +181,23 @@ export default {
           this.$router.push("/login");
         });
     },
-    async getRoomList() {
+    async getRoomList(navigatePage = null) {
+      if (navigatePage) {
+        this.roomsPage.currentPage = navigatePage;
+      }
       await axios
         .get(
           `${this.storedApiUrl}/users/${this.storedUserId}/rooms`,
           {
+            params: {
+              page: this.roomsPage.currentPage
+            },
             headers: this.loginHeader
           }
         )
         .then(result => {
+          this.roomsPage.perPage = result.data.data.page.per_page;
+          this.roomsPage.totalEntries = result.data.data.page.total_entries;
           this.rooms = result.data.data.rooms;
           if (this.rooms[0]) {
             this.selectedRoom = this.rooms[0].id;

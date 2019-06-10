@@ -35,13 +35,12 @@
               </td>
             </tr>
           </table>
-          <Pagination
-            v-model="page.currentPage"
-            :records="page.totalEntries"
-            :per-page="page.perPage"
-            @paginate="getAllRoomList"
-            :options="{theme: 'bulma'}"
-          ></Pagination>
+          <Paginator
+            :currentPage="page.currentPage"
+            :perPage="page.perPage"
+            :totalEntries="page.totalEntries"
+            @pageChanged="getAllRoomList"
+          ></Paginator>
         </div>
         <div class v-else>{{ $t("nothingFound") }}</div>
       </section>
@@ -55,7 +54,7 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
-import Pagination from "vue-pagination-2";
+import Paginator from "./Paginator";
 
 export default {
   data() {
@@ -70,7 +69,7 @@ export default {
     };
   },
   components: {
-    Pagination
+    Paginator
   },
   computed: {
     ...mapState([
@@ -83,8 +82,10 @@ export default {
   },
   props: [""],
   methods: {
-    async getAllRoomList() {
-      let page = this.page.currentPage;
+    async getAllRoomList(navigatePage = null) {
+      if (navigatePage) {
+        this.page.currentPage = navigatePage;
+      }
       await axios
         .get(
           `${this.storedApiUrl}/rooms`,

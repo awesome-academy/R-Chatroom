@@ -60,7 +60,9 @@ var en = {
   size: "Size",
   bytes: "byte(s)",
   chooseAFile: "Choose a file",
-  noFileSelected: "No file selected"
+  noFileSelected: "No file selected",
+  next: "Next",
+  previous: "Previous"
 };
 
 export default en;
